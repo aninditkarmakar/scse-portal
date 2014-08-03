@@ -9,7 +9,7 @@
 @stop
 
 @section('top-scripts')
-	{{ HTML::script('js/jquery.tokeninput.js') }}
+
 @stop
 
 @section('topbar')
@@ -23,7 +23,12 @@
 		<div class="row">
 			<div class="small-12 medium-8 medium-offset-2 columns">
 				<label>Search</label>
-				<input type="text" id="search_input" placeholder="Type Search Word..." />
+				<div id="div_search_faculty" style="display:none">
+					<input type="text" id="search_faculty" placeholder="Type Search Word..."/>
+				</div>
+				<div id="div_search_project">
+					<input type="text" id="search_project" placeholder="Type Search Word..." />
+				</div>
 			</div>
 		</div>
 		<div class="row">  
@@ -48,9 +53,29 @@
 @stop
 
 @section('bottom-scripts')
+{{ HTML::script('js/jquery.tokeninput.js') }}
 <script>
 	$(document).ready(function () {
-    	$("#search_input").tokenInput("{{route('search-projects')}}");
+		var projUrl = "{{ route('search-projects') }}";
+		var facUrl = "{{ route('search-faculty') }}";
+
+    	$("#search_faculty").tokenInput(facUrl);
+    	$("#search_project").tokenInput(projUrl);
+    	$('#searchAcademic').prop('checked', true);
+
+    	$('#searchContact').on('click', function() {
+    		$('#div_search_project').hide();
+    		$('#searchAcademic').prop('checked', false);
+    		$('#div_search_faculty').show();
+    		$('#searchContact').prop('checked', true);
+    	});
+
+    	$('#searchAcademic').on('click', function() {
+    		$('#div_search_faculty').hide();
+    		$('#searchContact').prop('checked', false);
+    		$('#div_search_project').show();
+    		$('#searchAcademic').prop('checked', true);
+    	});
 	});
 </script>
 @stop

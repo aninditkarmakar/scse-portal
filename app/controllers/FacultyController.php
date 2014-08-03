@@ -31,7 +31,41 @@ class FacultyController extends \BaseController {
 	 */
 	public function store()
 	{
-		//
+		$input = array(
+			'firstname' => Input::get('firstname'),
+			'lastname' => Input::get('lastname'),
+			'faculty_code' => Input::get('faculty_code'),
+			'email' => Input::get('email'),
+			'cabin' => Input::get('cabin'),
+			'password' => Input::get('password'),
+		);
+
+		$rules = array(
+			'firstname' => 'required',
+			'lastname' => 'required',
+			'faculty_code' => 'required|integer|unique:faculty',
+			'email' => 'required|email|unique:faculty',
+			'password' => 'required',
+		);
+
+		$validator = Validator::make($input, $rules);
+
+		if($validator->fails()) {
+			return Redirect::route('faculty.create')->withErrors($validator);
+		}
+
+		$faculty = new User();
+
+		$faculty->firstname = $input['firstname'];
+		$faculty->lastname = $input['lastname'];
+		$faculty->faculty_code = $input['faculty_code'];
+		$faculty->email = $input['email'];
+		$faculty->cabin = $input['cabin'];
+		$faculty->password = Hash::make($input['password']);
+
+		$faculty->save();
+
+		return Redirect::route('dashboard')->with('message', 'Faculty Added Successfully');
 	}
 
 

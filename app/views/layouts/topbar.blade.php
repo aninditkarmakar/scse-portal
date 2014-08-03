@@ -2,7 +2,7 @@
   <nav class="top-bar" data-topbar data-options="sticky_on: large">
    <ul class="title-area">
     <li class="name site-title">
-      <h1><a href="#">SCSE PORTAL</a>
+      <h1><a href="{{ route('home') }}">SCSE PORTAL</a>
       </li>
       <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
     </ul>
@@ -22,6 +22,7 @@
         @if(Auth::check()) 
           <?php $create_student_url = route('student.create'); ?>
           <?php $create_faculty_url = route('faculty.create'); ?>
+          
           <li class="{{ Request::url() === $create_student_url?('active'):('') }}">{{ link_to_route('student.create', 'Add Student') }}</li>
           <li class="{{ Request::url() === $create_faculty_url?('active'):('') }}">{{ link_to_route('faculty.create', 'Add Faculty') }}
         @endif

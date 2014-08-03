@@ -5,3 +5,8 @@
 div.content {
 	margin-top: 30px;
 }
+
+span.error-message {
+	color: red;
+	font-size: 1em;
+}
