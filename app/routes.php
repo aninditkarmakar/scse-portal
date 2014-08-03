@@ -15,3 +15,34 @@ Route::get('/', function()
 {
 	return View::make('home');
 });
+
+Route::get('test', function() {
+	return "hello";
+});
+
+
+// All routes that require authentication
+Route::group(array('before' => 'auth'), function(){
+
+
+	Route::get('dashboard', array('as' => 'dashboard', function() {
+		return View::make('authorized.dashboard');
+	}));
+
+
+	Route::get('logout', array('as' => 'logout', function() {
+		Auth::logout();
+		return Redirect::route('login.index');
+	}));
+
+	Route::resource('student', 'StudentController');
+
+	Route::resource('faculty', 'FacultyController');
+
+});
+
+Route::resource('login', 'LoginController');
+
+Route::get('search/projects', array('as' => 'search-projects', 'uses' => 'SearchController@searchProjects'));
+
+Route::get('search/faculty', array('as' => 'search-faculty', 'uses' => 'SearchController@searchFaculty'));

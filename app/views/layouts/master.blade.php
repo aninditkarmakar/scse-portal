@@ -4,33 +4,37 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	@section('page-title')
-		<title>Master</title>
+	<title>Master</title>
 	@show
-	<link rel="stylesheet" href="css/foundation.css" />
-	<link rel="stylesheet" href="css/style.css" />
-	@section('styles')
+
+	{{ HTML::style('css/foundation.css') }}
+	{{ HTML::style('css/style.css') }}
+
+	@section('stylesheets')
 
 	@show
+	{{ HTML::script('js/vendor/modernizr.js') }}
 
 	@section('top-scripts')
 
 	@show
-	<script src="js/vendor/modernizr.js"></script>
-	<script src="/js/foundation.min.js"></script>
 </head>
 <body>
 	@section('topbar')
 
 	@show
 
-	@section('content')
+	<div class="content">
+		@section('content')
 
-	@show
-
+		@show
+	</div>
 	@section('footer')
 
 	@show
 
+	{{ HTML::script('js/vendor/jquery.js') }}
+	{{ HTML::script('js/foundation.min.js') }}
 	@section('bottom-scripts')
 
 	@show

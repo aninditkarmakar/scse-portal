@@ -4,6 +4,14 @@
 	<title>SCSE Portal | VIT</title>
 @stop
 
+@section('stylesheets')
+	{{ HTML::style('css/token-input.css') }}
+@stop
+
+@section('top-scripts')
+	{{ HTML::script('js/jquery.tokeninput.js') }}
+@stop
+
 @section('topbar')
 	@include('layouts.topbar')
 @stop
@@ -15,7 +23,7 @@
 		<div class="row">
 			<div class="small-12 medium-8 medium-offset-2 columns">
 				<label>Search</label>
-				<input type="text" placeholder="Type Search Word..." />
+				<input type="text" id="search_input" placeholder="Type Search Word..." />
 			</div>
 		</div>
 		<div class="row">  
@@ -37,4 +45,12 @@
 	</form> 
 </div> 
 
+@stop
+
+@section('bottom-scripts')
+<script>
+	$(document).ready(function () {
+    	$("#search_input").tokenInput("{{route('search-projects')}}");
+	});
+</script>
 @stop

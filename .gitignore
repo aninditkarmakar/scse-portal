@@ -1,3 +1,4 @@
+logs/*
 composer.phar
 composer.lock
 .env.*.php
