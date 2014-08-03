@@ -18,8 +18,8 @@ class CreateProjectTable extends Migration {
 			$table->string('title')->index();
 			$table->integer('faculty_id')->unsigned()->nullable();
 			$table->integer('type_id')->unsigned()->nullable();
-			$table->date('start_date');
-			$table->date('end_date');
+			$table->datetime('start_date');
+			$table->datetime('end_date')->nullable();
 			$table->timestamps();
 		});
 	}

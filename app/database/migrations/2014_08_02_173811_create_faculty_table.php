@@ -17,7 +17,7 @@ class CreateFacultyTable extends Migration {
 			$table->increments('id');
 			$table->string('firstname');
 			$table->string('lastname');
-			$table->string('reg_no')->unique();
+			$table->mediuminteger('faculty_code')->unique();
 			$table->string('password');
 			$table->string('email')->unique();
 			$table->string('cabin');

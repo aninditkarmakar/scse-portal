@@ -3,11 +3,13 @@
 class Project extends \Eloquent {
 	protected $guarded = ['id'];
 
-	public function abstract() {
+	protected $table = 'project';
+
+	public function projectAbstract() {
 		return $this->hasOne('ProjectAbstract', 'project_id', 'id');
 	}
 
-	public function type() {
+	public function projectType() {
 		return $this->belongsTo('ProjectType', 'type_id');
 	}
 

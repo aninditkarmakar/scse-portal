@@ -15,7 +15,7 @@ class CreateProjectAbstractTable extends Migration {
 		Schema::create('project_abstract', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->mediumtext('abstract');
+			$table->mediumtext('content');
 			$table->integer('project_id')->unsigned();
 			$table->timestamps();
 		});

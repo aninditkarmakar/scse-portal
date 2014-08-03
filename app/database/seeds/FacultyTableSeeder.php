@@ -9,10 +9,15 @@ class FacultyTableSeeder extends Seeder {
 	{
 		$faker = Faker::create();
 
-		foreach(range(1, 10) as $index)
+		foreach(range(1, 50) as $index)
 		{
-			Faculty::create([
-
+			User::create([
+				'firstname' => $faker->firstName,
+				'lastname' => $faker->lastName,
+				'faculty_code' => $faker->unique()->numberBetween(10000, 70000),
+				'password' => Hash::make('hello123'),
+				'email' => $faker->unique()->companyEmail(),
+				'cabin' => strtoupper($faker->unique()->bothify('???-###-?##')),
 			]);
 		}
 	}
