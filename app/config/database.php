@@ -54,10 +54,10 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => 'localhost',
-			'database'  => 'scse',
-			'username'  => 'root',
-			'password'  => 'anindit',
+			'host'      => 'mysql.hostinger.in',
+			'database'  => 'u457786773_scse',
+			'username'  => 'u457786773_scse',
+			'password'  => 'hello123',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
