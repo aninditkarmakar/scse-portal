@@ -10,3 +10,8 @@ span.error-message {
 	color: red;
 	font-size: 1em;
 }
+
+span.success-message {
+	color: green;
+	font-size: 1em;
+}

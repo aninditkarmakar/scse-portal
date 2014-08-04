@@ -15,6 +15,7 @@ class StudentTableSeeder extends Seeder {
 				'firstname' => $faker->firstName,
 				'lastname' => $faker->lastName,
 				'reg_no' => strtoupper($faker->unique()->bothify('##???0###')),
+				'email' => $faker->unique()->email,
 			]);
 		}
 	}

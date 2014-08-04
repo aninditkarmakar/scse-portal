@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddColumnEmailToStudentTable' => $baseDir . '/app/database/migrations/2014_08_04_153138_add_column_email_to_student_table.php',
     'AddColumnRememberTokenToFacultyTable' => $baseDir . '/app/database/migrations/2014_08_03_164754_add_column_remember_token_to_faculty_table.php',
     'AddIndexToFacultyTable' => $baseDir . '/app/database/migrations/2014_08_03_141222_add_index_to_faculty_table.php',
     'AddIndexToProjectAbstractTable' => $baseDir . '/app/database/migrations/2014_08_02_175035_add_index_to_project_abstract_table.php',
@@ -50,6 +51,7 @@ return array(
     'Crypt_TripleDES' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Crypt/TripleDES.php',
     'Crypt_Twofish' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Crypt/Twofish.php',
     'DatabaseSeeder' => $baseDir . '/app/database/seeds/DatabaseSeeder.php',
+    'FacultyController' => $baseDir . '/app/controllers/FacultyController.php',
     'FacultyTableSeeder' => $baseDir . '/app/database/seeds/FacultyTableSeeder.php',
     'Faker\\Documentor' => $vendorDir . '/fzaninotto/faker/src/Faker/Documentor.php',
     'Faker\\Factory' => $vendorDir . '/fzaninotto/faker/src/Faker/Factory.php',
@@ -1176,6 +1178,7 @@ return array(
     'Stack\\Builder' => $vendorDir . '/stack/builder/src/Stack/Builder.php',
     'Stack\\StackedHttpKernel' => $vendorDir . '/stack/builder/src/Stack/StackedHttpKernel.php',
     'Student' => $baseDir . '/app/models/Student.php',
+    'StudentController' => $baseDir . '/app/controllers/StudentController.php',
     'StudentTableSeeder' => $baseDir . '/app/database/seeds/StudentTableSeeder.php',
     'Symfony\\Component\\BrowserKit\\Client' => $vendorDir . '/symfony/browser-kit/Symfony/Component/BrowserKit/Client.php',
     'Symfony\\Component\\BrowserKit\\Cookie' => $vendorDir . '/symfony/browser-kit/Symfony/Component/BrowserKit/Cookie.php',
