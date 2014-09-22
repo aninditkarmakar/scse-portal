@@ -3,9 +3,11 @@
 class ProjectAbstract extends \Eloquent {
 	protected $guarded=['id'];
 
-	protected $table = 'project_abstract';
+	protected $table = 'project_abstracts';
+
+	public $timestamps = false;
 
 	public function project() {
-		$this->belongsTo('Project', 'project_id');
+		return $this->belongsTo('Project', 'project_id');
 	}
 }

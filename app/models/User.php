@@ -14,17 +14,31 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 *
 	 * @var string
 	 */
-	protected $table = 'faculty';
+	protected $table = 'users';
 
 	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
 	 * @var array
 	 */
-	protected $hidden = array('password');//, 'remember_token');
+	protected $hidden = array('password', 'remember_token', 'created_at', 'updated_at');
 
-	public function projects() {
-		return $this->hasMany('Project', 'faculty_id', 'id');
+	public static function boot() {
+		parent::boot();
+
+		static::deleting(function($user) {
+			$user->roles()->detach();
+			$user->faculty()->delete();
+			return true;
+		});
+	}
+
+	public function roles() {
+		return $this->belongsToMany('Role', 'users_has_roles', 'user_id', 'role_id');
+	}
+
+	public function faculty() {
+		return $this->hasOne('Faculty', 'user_id', 'id');
 	}
 
 	

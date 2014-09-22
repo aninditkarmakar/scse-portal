@@ -16,33 +16,57 @@ Route::get('/', array('as'=>'home', function()
 	return View::make('home');
 }));
 
-Route::get('test', function() {
-	return "hello";
+Route::get('/delete', function() {
+	$user = User::where('username','like','10010')->firstOrFail();
+	
+	if(!$user->delete())
+		return 'false';
+
+	return 'true';
 });
 
 
-// All routes that require authentication
-Route::group(array('before' => 'auth'), function(){
+// Route::get('search/id', array('as' => 'search-id', 'uses' => 'SearchController@searchID'));
 
+Route::group(array('after' => 'json-header'), function() {
 
-	Route::get('dashboard', array('as' => 'dashboard', function() {
-		return View::make('authorized.dashboard');
-	}));
+	// All routes that require authentication
+	Route::group(array('before' => 'auth', 'after' => 'json-header'), function(){
 
+		Route::group(array('before' => 'auth-admin'), function() {
 
-	Route::get('logout', array('as' => 'logout', function() {
-		Auth::logout();
-		return Redirect::route('login.index');
-	}));
+			Route::get('testadmin', function() {
+				return "admin";
+			});
 
-	Route::resource('student', 'StudentController');
+			Route::resource('admin/add-professor', 'ProfessorController');
 
-	Route::resource('faculty', 'FacultyController');
+		});
+
+		Route::group(array('before' => 'auth-professor'), function() {
+
+			Route::get('testprofessor', function() {
+				return "professor";
+			});
+
+		});
+
+	});
+
+	Route::get('logout', array('as' => 'logout', 'uses' => 'LoginController@logout'));
+
+	Route::resource('login', 'LoginController');
+	
+	Route::get('search/faculty-name', array('as' => 'search-faculty-name', 'uses' => 'SearchController@searchFacultyName'));
+
+	Route::get('search/faculty-code', array('as' => 'search-faculty-code', 'uses' => 'SearchController@searchFacultyCode'));
+
+	Route::get('search/project-title', array('as' => 'search-project-title', 'uses' => 'SearchController@searchProjectTitle'));
+
+	Route::get('search/project-tags', array('as' => 'search-project-tags', 'uses' => 'SearchController@searchProjectTags'));
+
+	Route::get('search/subject-name', array('as' => 'search-subject-name', 'uses' => 'SearchController@searchSubjectName'));
+
+	Route::get('search/subject-code', array('as' => 'search-subject-code', 'uses' => 'SearchController@searchSubjectCode'));
 
 });
-
-Route::resource('login', 'LoginController');
-
-Route::get('search/projects', array('as' => 'search-projects', 'uses' => 'SearchController@searchProjects'));
-
-Route::get('search/faculty', array('as' => 'search-faculty', 'uses' => 'SearchController@searchFaculty'));

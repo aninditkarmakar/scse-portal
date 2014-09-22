@@ -1,5 +1,14 @@
 <?php
 
+function unauthorizedResponse() {
+	$returnData = array(
+		"success" => false,
+		"error" => 'Unauthorized',
+		);
+
+	return Response::make(json_encode($returnData), 401);
+}
+
 /*
 |--------------------------------------------------------------------------
 | Application & Route Filters
@@ -20,6 +29,9 @@ App::before(function($request)
 App::after(function($request, $response)
 {
 	//
+	$response->headers->set('Access-Control-Allow-Origin', '*');
+	$response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+	$response->headers->set('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Access, Accept');
 });
 
 /*
@@ -37,14 +49,53 @@ Route::filter('auth', function()
 {
 	if (Auth::guest())
 	{
-		if (Request::ajax())
-		{
-			return Response::make('Unauthorized', 401);
+		return unauthorizedResponse();
+	}
+});
+
+Route::filter('auth-admin', function() {
+	$returnData = array(
+		"success" => false,
+		"error" => 'Unauthorized',
+		);
+
+	if (Auth::guest())
+	{
+		return unauthorizedResponse();
+	} else {
+		$user = Auth::user();
+		$flag = 0;
+		foreach($user->roles as $role) {
+			if($role['role'] === 'admin') {
+				$flag = 1;
+				break;
+			}
 		}
-		else
-		{
-			return Redirect::guest('login');
+
+		if($flag === 0) {
+			return unauthorizedResponse();
+		} 
+	}
+
+});
+
+Route::filter('auth-professor', function() {
+	if (Auth::guest())
+	{
+		return unauthorizedResponse();
+	} else {
+		$user = Auth::user();
+		$flag = 0;
+		foreach($user->roles as $role) {
+			if($role['role'] === 'professor') {
+				$flag = 1;
+				break;
+			}
 		}
+
+		if($flag === 0) {
+			return unauthorizedResponse();
+		} 
 	}
 });
 
@@ -87,4 +138,8 @@ Route::filter('csrf', function()
 	{
 		throw new Illuminate\Session\TokenMismatchException;
 	}
+});
+
+Route::filter('json-header', function($route, $request, $response) {
+	$response->headers->set('Content-Type', 'application/json');
 });

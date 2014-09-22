@@ -3,10 +3,14 @@
 class Project extends \Eloquent {
 	protected $guarded = ['id'];
 
-	protected $table = 'project';
+	protected $table = 'projects';
+
+	protected $hidden = ['type_id', 'faculty_id'];
+
+	public $timestamps = false;
 
 	public function projectAbstract() {
-		return $this->hasOne('ProjectAbstract', 'project_id', 'id');
+		return $this->hasOne('ProjectAbstract', 'project_id');
 	}
 
 	public function projectType() {
@@ -14,10 +18,14 @@ class Project extends \Eloquent {
 	}
 
 	public function mentor() {
-		return $this->belongsTo('User', 'faculty_id');
+		return $this->belongsTo('Faculty', 'faculty_id');
 	}
 
 	public function students() {
-		return $this->belongsToMany('Student', 'student_has_project', 'project_id', 'student_id');
+		return $this->belongsToMany('Student', 'students_has_projects', 'project_id', 'student_id');
+	}
+
+	public function tags() {
+		return $this->belongsToMany('ProjectTag', 'projects_has_project_tags', 'project_id', 'project_tag_id');
 	}
 }

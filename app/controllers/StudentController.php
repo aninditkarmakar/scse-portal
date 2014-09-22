@@ -31,7 +31,9 @@ class StudentController extends \BaseController {
 	 */
 	public function store()
 	{
-		$input = array(
+		$input= input::all();
+		$input= json_decode($input, true);
+		/*$input = array(
 			'firstname' => Input::get('firstname'),
 			'lastname' => Input::get('lastname'),
 			'reg_no' => Input::get('reg_no'),
@@ -49,7 +51,7 @@ class StudentController extends \BaseController {
 
 		if($validator->fails()) {
 			return Redirect::route('student.create')->withErrors($validator);
-		}
+		}*/
 
 		$student = new Student();
 

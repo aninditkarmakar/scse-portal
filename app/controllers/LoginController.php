@@ -31,15 +31,44 @@ class LoginController extends \BaseController {
 	 */
 	public function store()
 	{
-		$facultyCode = Input::get('faculty_code');
-		$password = Input::get('password');
+		// Get the raw JSON payload
+		$credentials = Request::instance()->getContent();
+		$credentials = json_decode($credentials, true);
 
-		$creds = array('faculty_code'=>$facultyCode, 'password'=>$password);
+		$returnData = array(
+				'success' => false,
+			);
+
+		if(isset($credentials['username']) && isset($credentials['password'])) {
+			$creds = array('username'=>$credentials['username'], 'password'=>$credentials['password']);
+		} else {
+			$returnData['message'] = 'What are you trying?';
+
+			return Response::make(json_encode($returnData), 400);
+		}
 
 		if(Auth::attempt($creds)) {
-			return Redirect::intended('dashboard');
+			$returnData['success'] = true;
+			$returnData['sessionId'] = Session::get('_token');
+			$returnData['user'] = array();
+
+			$user = Auth::user();
+			$returnData['user']['id'] = $user->id;
+			$returnData['user']['username'] = $user->username;
+			$returnData['user']['password_changed'] = $user->init_password !== null ? false:true;
+			$returnData['user']['roles'] = array();
+
+
+			foreach($user->roles as $role) {
+				array_push($returnData['user']['roles'], $role['role']);
+			}
+
+			return Response::make(json_encode($returnData), 200);
+			// return Redirect::intended('dashboard');
 		} else {
-			return Redirect::route('login.index')->with('login-error', 'Incorrect credentials');
+			$returnData['message'] = 'Incorrect Credentials';
+
+			return Response::make(json_encode($returnData), 400);
 		}
 	}
 
@@ -91,5 +120,12 @@ class LoginController extends \BaseController {
 		//
 	}
 
+	public function logout() {
+		Auth::logout();
+
+		$returnData['success'] = true;
+
+		return Response::make(json_encode($returnData), 200);
+	}
 
 }
