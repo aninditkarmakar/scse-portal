@@ -1,6 +1,6 @@
 <?php
 
-class Project extends BaseEloquent {
+class Project extends \Eloquent {
 	protected $guarded = ['id'];
 
 	protected $table = 'projects';

@@ -8,9 +8,10 @@ class BaseEloquent extends \Eloquent {
 
 	public function newPivot(Model $parent, array $attributes, $table, $exists) {
 
-		if(($parent instanceof Faculty) || ($parent instanceof Subject)) {
-			return new FacultySubjectPivot($parent, $attributes, $table, $exists);
-		}
-
+		// if(($parent instanceof Faculty) || ($parent instanceof Subject)) {
+		// 	return new FacultySubjectPivot($parent, $attributes, $table, $exists);
+		// } else {
+		// 	return new 
+		// }
 	}
 }

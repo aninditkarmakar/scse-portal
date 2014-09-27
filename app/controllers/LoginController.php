@@ -64,7 +64,7 @@ class LoginController extends \BaseController {
 			}
 
 			return Response::make(json_encode($returnData), 200);
-			// return Redirect::intended('dashboard');
+			
 		} else {
 			$returnData['message'] = 'Incorrect Credentials';
 

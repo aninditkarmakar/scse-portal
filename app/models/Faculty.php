@@ -1,11 +1,27 @@
 <?php
 
-class Faculty extends BaseEloquent {
+use Illuminate\Database\Eloquent\Model as Model;
+
+class Faculty extends \Eloquent {
 	protected $guarded = ['id'];
 
 	protected $table = 'faculties';
 
 	protected $hidden = array('created_at', 'updated_at');
+
+	public function newPivot(Model $parent, array $attributes, $table, $exists) {
+
+		if($parent instanceof Subject) {
+			return new FacultySubjectPivot($parent, $attributes, $table, $exists);
+		} 
+
+		return parent::newPivot($parent, $attributes, $table, $exists);
+		// if(($parent instanceof Faculty) || ($parent instanceof Subject)) {
+		// 	return new FacultySubjectPivot($parent, $attributes, $table, $exists);
+		// } else {
+		// 	return new 
+		// }
+	}
 
 	public static function boot() {
 		parent::boot();

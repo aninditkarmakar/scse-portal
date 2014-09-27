@@ -12,7 +12,7 @@ class RolesTableSeeder extends Seeder {
 			'role' => 'admin'
 		]);
 		Role::create([
-			'role' => 'faculty'
+			'role' => 'professor'
 		]);
 		Role::create([
 			'role' => 'student'

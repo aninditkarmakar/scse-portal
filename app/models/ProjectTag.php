@@ -1,6 +1,6 @@
 <?php
 
-class ProjectTag extends BaseEloquent {
+class ProjectTag extends \Eloquent {
 	protected $guarded = ['id'];
 
 	protected $hidden = ['pivot'];

@@ -1,6 +1,6 @@
 <?php
 
-class Role extends BaseEloquent {
+class Role extends \Eloquent {
 	protected $guarded = ['id'];
 
 	protected $table = 'roles';

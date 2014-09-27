@@ -53,38 +53,38 @@ Route::group(array('after' => 'json-header'), function() {
 
 	});
 
-	// Route::get('test', function() {
-	// 	$fac = Faculty::where('id','=', 2)->with('subjects')->first();
-	// 	$semIds = [];
+	Route::get('test', function() {
+		$fac = Faculty::where('id','=', 2)->with('subjects')->first();
+		$semIds = [];
 
-	// 	foreach($fac->subjects as $subject) {
-	// 		$subject->setHidden(['pivot', 'id']);
-	// 		array_push($semIds, $subject->pivot->semester_id);
-	// 	}
+		foreach($fac->subjects as $subject) {
+			$subject->setHidden(['pivot', 'id']);
+			array_push($semIds, $subject->pivot->semester_id);
+		}
 
-	// 	$sems = Semester::whereIn('id', $semIds)->get();
+		$sems = Semester::whereIn('id', $semIds)->get();
 
-	// 	$semesters = array();
+		$semesters = array();
 
-	// 	foreach($sems as $sem) {
-	// 		$semesters[$sem->id] = array(
-	// 				'name' => $sem->type.' '.$sem->start_year.'-'.$sem->end_year,
-	// 				'type' => $sem->type,
-	// 				'start' => $sem->start_year,
-	// 				'end' => $sem->end_year,
-	// 			);
-	// 	}
+		foreach($sems as $sem) {
+			$semesters[$sem->id] = array(
+					'name' => $sem->type.' '.$sem->start_year.'-'.$sem->end_year,
+					'type' => $sem->type,
+					'start' => $sem->start_year,
+					'end' => $sem->end_year,
+				);
+		}
 
-	// 	foreach($fac->subjects as $subject) {
-	// 		$subject->semester = $semesters[$subject->pivot->semester_id];
-	// 	}
+		foreach($fac->subjects as $subject) {
+			$subject->semester = $semesters[$subject->pivot->semester_id];
+		}
 
-	// 	$queries = DB::getQueryLog();
+		$queries = DB::getQueryLog();
 
-	// 	// return Response::make(json_encode($semIds));
+		// return Response::make(json_encode($semIds));
 
-	// 	return Response::make(json_encode($fac));
-	// });
+		return Response::make(json_encode($fac));
+	});
 
 	Route::get('logout', array('as' => 'logout', 'uses' => 'LoginController@logout'));
 

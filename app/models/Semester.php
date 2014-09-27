@@ -1,6 +1,6 @@
 <?php
 
-class Semester extends BaseEloquent {
+class Semester extends \Eloquent {
 	protected $guarded = ['id'];
 
 	public $timestamps = false;
