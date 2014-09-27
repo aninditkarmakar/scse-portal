@@ -16,7 +16,9 @@ class SubjectTableSeeder extends Seeder {
 			$subject->subject_code = $faker->unique()->bothify('CSE###');
 			$subject->save();
 			foreach(range(1, $faker->randomNumber(1,10)) as $index) {
-				$subject->faculties()->attach($faker->randomNumber(1,100));
+				$subject->faculties()->attach($faker->randomNumber(1,100), array(
+						'semester_id' => $faker->randomNumber(1,30)
+					));
 			}
 		}
 	}

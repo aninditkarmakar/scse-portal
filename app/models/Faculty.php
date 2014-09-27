@@ -1,6 +1,6 @@
 <?php
 
-class Faculty extends \Eloquent {
+class Faculty extends BaseEloquent {
 	protected $guarded = ['id'];
 
 	protected $table = 'faculties';
@@ -19,12 +19,24 @@ class Faculty extends \Eloquent {
 		});
 	}
 
+	public function getIdAttribute($value) {
+		return (int) $value;
+	}
+
+	public function getUserIdAttribute($value) {
+		return (int) $value;
+	}
+
+	public function getFacultyCodeAttribute($value) {
+		return (int) $value;
+	}
+
 	public function user() {
 		return $this->belongsTo('User', 'user_id', 'id');
 	}
 
 	public function subjects() {
-		return $this->belongsToMany('Subject', 'faculties_has_subjects', 'faculty_id', 'subject_id');
+		return $this->belongsToMany('Subject', 'faculties_has_subjects', 'faculty_id', 'subject_id')->withPivot('semester_id');
 	}
 
 	public function projects() {

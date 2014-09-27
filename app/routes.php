@@ -16,14 +16,14 @@ Route::get('/', array('as'=>'home', function()
 	return View::make('home');
 }));
 
-Route::get('/delete', function() {
-	$user = User::where('username','like','10010')->firstOrFail();
+// Route::get('/delete', function() {
+// 	$user = User::where('username','like','10010')->firstOrFail();
 	
-	if(!$user->delete())
-		return 'false';
+// 	if(!$user->delete())
+// 		return 'false';
 
-	return 'true';
-});
+// 	return 'true';
+// });
 
 
 // Route::get('search/id', array('as' => 'search-id', 'uses' => 'SearchController@searchID'));
@@ -31,13 +31,13 @@ Route::get('/delete', function() {
 Route::group(array('after' => 'json-header'), function() {
 
 	// All routes that require authentication
-	Route::group(array('before' => 'auth', 'after' => 'json-header'), function(){
+	Route::group(array('before' => 'auth'), function(){
 
 		Route::group(array('before' => 'auth-admin'), function() {
 
-			Route::get('testadmin', function() {
-				return "admin";
-			});
+			// Route::get('testadmin', function() {
+			// 	return "admin";
+			// });
 
 			Route::resource('admin/add-professor', 'ProfessorController');
 
@@ -45,13 +45,46 @@ Route::group(array('after' => 'json-header'), function() {
 
 		Route::group(array('before' => 'auth-professor'), function() {
 
-			Route::get('testprofessor', function() {
-				return "professor";
-			});
+			// Route::get('testprofessor', function() {
+			// 	return "professor";
+			// });
 
 		});
 
 	});
+
+	// Route::get('test', function() {
+	// 	$fac = Faculty::where('id','=', 2)->with('subjects')->first();
+	// 	$semIds = [];
+
+	// 	foreach($fac->subjects as $subject) {
+	// 		$subject->setHidden(['pivot', 'id']);
+	// 		array_push($semIds, $subject->pivot->semester_id);
+	// 	}
+
+	// 	$sems = Semester::whereIn('id', $semIds)->get();
+
+	// 	$semesters = array();
+
+	// 	foreach($sems as $sem) {
+	// 		$semesters[$sem->id] = array(
+	// 				'name' => $sem->type.' '.$sem->start_year.'-'.$sem->end_year,
+	// 				'type' => $sem->type,
+	// 				'start' => $sem->start_year,
+	// 				'end' => $sem->end_year,
+	// 			);
+	// 	}
+
+	// 	foreach($fac->subjects as $subject) {
+	// 		$subject->semester = $semesters[$subject->pivot->semester_id];
+	// 	}
+
+	// 	$queries = DB::getQueryLog();
+
+	// 	// return Response::make(json_encode($semIds));
+
+	// 	return Response::make(json_encode($fac));
+	// });
 
 	Route::get('logout', array('as' => 'logout', 'uses' => 'LoginController@logout'));
 

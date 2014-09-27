@@ -47,6 +47,7 @@ class ProfessorController extends \BaseController {
 
 		$data = $data['professor'];
 
+		// Validation rules
 		$rules = array(
 			'facCode' => 'required|digits:5|unique:faculties,faculty_code',
 			'firstName' => 'required|alpha',
@@ -55,6 +56,7 @@ class ProfessorController extends \BaseController {
 			'cabin' => 'required|alpha_dash',
 			);
 
+		// Do validation
 		$validator = Validator::make($data, $rules);
 
 		if($validator->fails()) {
@@ -65,19 +67,23 @@ class ProfessorController extends \BaseController {
 
 		$faker = Faker::create();
 
+		// get the 'professor' role
 		$role = Role::where('role', 'like', 'professor')->firstOrFail();
 
+		// create a new user
 		$user = new User();
 		$user->email = $data['email'];
 		$user->username = strval($data['facCode']);
 		$user->init_password = $faker->bothify('??#?##????#');
 		$user->password = Hash::make($user->init_password);
 
+		// create a new faculty
 		$faculty = new Faculty();
 		$faculty->firstname = ucfirst($data['firstName']);
 		$faculty->lastname = ucfirst($data['lastName']);
 		$faculty->faculty_code = $data['facCode'];
 		$faculty->cabin = strtoupper($data['cabin']);
+
 
 		if(! $user->save()) {
 			$returnData['message'] = 'There was an error saving the details. Please try again.';
@@ -103,6 +109,7 @@ class ProfessorController extends \BaseController {
 			return Response::make(json_encode($returnData), 400);
 		}
 
+		// make the return data
 		$returnData['success'] = true;
 		$returnData['professor'] = array(
 				'id' => $faculty->id,

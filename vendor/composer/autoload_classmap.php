@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddColumnToFacultiesHasSubjectsTable' => $baseDir . '/app/database/migrations/2014_09_27_124216_add_column_to_faculties_has_subjects_table.php',
     'AddColumnToUsersTable' => $baseDir . '/app/database/migrations/2014_09_22_165809_add_column_to_users_table.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
     'Boris\\Boris' => $vendorDir . '/d11wtq/boris/lib/Boris/Boris.php',
@@ -37,6 +38,7 @@ return array(
     'CreateProjectsHasProjectTagsTable' => $baseDir . '/app/database/migrations/2014_09_16_170424_create_projects_has_project_tags_table.php',
     'CreateProjectsTable' => $baseDir . '/app/database/migrations/2014_09_16_165050_create_projects_table.php',
     'CreateRolesTable' => $baseDir . '/app/database/migrations/2014_09_16_164013_create_roles_table.php',
+    'CreateSemestersTable' => $baseDir . '/app/database/migrations/2014_09_27_124137_create_semesters_table.php',
     'CreateStudentsHasProjectsTable' => $baseDir . '/app/database/migrations/2014_09_16_170249_create_students_has_projects_table.php',
     'CreateStudentsTable' => $baseDir . '/app/database/migrations/2014_09_16_164517_create_students_table.php',
     'CreateSubjectsTable' => $baseDir . '/app/database/migrations/2014_09_16_164127_create_subjects_table.php',
@@ -55,7 +57,6 @@ return array(
     'Crypt_Twofish' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Crypt/Twofish.php',
     'DatabaseSeeder' => $baseDir . '/app/database/seeds/DatabaseSeeder.php',
     'Faculty' => $baseDir . '/app/models/Faculty.php',
-    'FacultyController' => $baseDir . '/app/controllers/FacultyController.php',
     'FacultyTableSeeder' => $baseDir . '/app/database/seeds/FacultyTableSeeder.php',
     'Faker\\Documentor' => $vendorDir . '/fzaninotto/faker/src/Faker/Documentor.php',
     'Faker\\Factory' => $vendorDir . '/fzaninotto/faker/src/Faker/Factory.php',
