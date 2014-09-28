@@ -39,13 +39,11 @@ class ProfessorController extends \BaseController {
 			"success" => false,
 			);
 
-		if(!isset($data['professor'])) {
+		if($data === null) {
 			$returnData['message'] = "Invalid Format";
 
 			return Response::make(json_encode($returnData), 400);
 		}
-
-		$data = $data['professor'];
 
 		// Validation rules
 		$rules = array(

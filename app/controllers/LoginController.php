@@ -63,6 +63,7 @@ class LoginController extends \BaseController {
 				array_push($returnData['user']['roles'], $role['role']);
 			}
 
+			//return Response::make(json_encode(Session::all()), 200);
 			return Response::make(json_encode($returnData), 200);
 			
 		} else {

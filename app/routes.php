@@ -53,6 +53,12 @@ Route::group(array('after' => 'json-header'), function() {
 
 	});
 
+	Route::get('test2', function() {
+		$arr = json_decode('[]');
+		
+		return Response::make(json_encode($arr), 200);
+	});
+
 	Route::get('test', function() {
 		$fac = Faculty::where('id','=', 2)->with('subjects')->first();
 		$semIds = [];
@@ -80,8 +86,6 @@ Route::group(array('after' => 'json-header'), function() {
 		}
 
 		$queries = DB::getQueryLog();
-
-		// return Response::make(json_encode($semIds));
 
 		return Response::make(json_encode($fac));
 	});

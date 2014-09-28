@@ -3,7 +3,7 @@
 function unauthorizedResponse() {
 	$returnData = array(
 		"success" => false,
-		"error" => 'Unauthorized',
+		"message" => 'Unauthorized',
 		);
 
 	return Response::make(json_encode($returnData), 401);
@@ -29,9 +29,10 @@ App::before(function($request)
 App::after(function($request, $response)
 {
 	//
-	$response->headers->set('Access-Control-Allow-Origin', '*');
-	$response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-	$response->headers->set('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Access, Accept');
+	$response->headers->set('Access-Control-Allow-Origin', 'http://127.0.0.1:9000');
+	$response->headers->set('Allow', 'GET,HEAD,POST,OPTIONS');
+	$response->headers->set('Access-Control-Allow-Credentials', 'true');
+	$response->headers->set('Access-Control-Allow-Headers', 'X-Requested-With, content-type, access, accept, X-Custom-Header');
 });
 
 /*
@@ -54,10 +55,10 @@ Route::filter('auth', function()
 });
 
 Route::filter('auth-admin', function() {
-	$returnData = array(
-		"success" => false,
-		"error" => 'Unauthorized',
-		);
+	// $returnData = array(
+	// 	"success" => false,
+	// 	"message" => 'Unauthorized',
+	// 	);
 
 	if (Auth::guest())
 	{
