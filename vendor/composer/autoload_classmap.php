@@ -7,8 +7,10 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'AddColumnToFacultiesHasSubjectsTable' => $baseDir . '/app/database/migrations/2014_09_27_124216_add_column_to_faculties_has_subjects_table.php',
+    'AddColumnToProjectsTable' => $baseDir . '/app/database/migrations/2014_10_06_125030_add_column_to_projects_table.php',
     'AddColumnToUsersTable' => $baseDir . '/app/database/migrations/2014_09_22_165809_add_column_to_users_table.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
+    'BaseEloquent' => $baseDir . '/app/models/BaseEloquent.php',
     'Boris\\Boris' => $vendorDir . '/d11wtq/boris/lib/Boris/Boris.php',
     'Boris\\CLIOptionsHandler' => $vendorDir . '/d11wtq/boris/lib/Boris/CLIOptionsHandler.php',
     'Boris\\ColoredInspector' => $vendorDir . '/d11wtq/boris/lib/Boris/ColoredInspector.php',
@@ -57,6 +59,7 @@ return array(
     'Crypt_Twofish' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Crypt/Twofish.php',
     'DatabaseSeeder' => $baseDir . '/app/database/seeds/DatabaseSeeder.php',
     'Faculty' => $baseDir . '/app/models/Faculty.php',
+    'FacultySubjectPivot' => $baseDir . '/app/models/FacultySubjectPivot.php',
     'FacultyTableSeeder' => $baseDir . '/app/database/seeds/FacultyTableSeeder.php',
     'Faker\\Documentor' => $vendorDir . '/fzaninotto/faker/src/Faker/Documentor.php',
     'Faker\\Factory' => $vendorDir . '/fzaninotto/faker/src/Faker/Factory.php',
@@ -1185,6 +1188,8 @@ return array(
     'Role' => $baseDir . '/app/models/Role.php',
     'RolesTableSeeder' => $baseDir . '/app/database/seeds/RolesTableSeeder.php',
     'SearchController' => $baseDir . '/app/controllers/SearchController.php',
+    'Semester' => $baseDir . '/app/models/Semester.php',
+    'SemesterTableSeeder' => $baseDir . '/app/database/seeds/SemesterTableSeeder.php',
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php',
     'Stack\\Builder' => $vendorDir . '/stack/builder/src/Stack/Builder.php',
     'Stack\\StackedHttpKernel' => $vendorDir . '/stack/builder/src/Stack/StackedHttpKernel.php',
