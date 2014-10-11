@@ -55,7 +55,7 @@ class LoginController extends \BaseController {
 			$user = Auth::user();
 			$returnData['user']['id'] = $user->id;
 			$returnData['user']['username'] = $user->username;
-			$returnData['user']['password_changed'] = $user->init_password !== null ? false:true;
+			$returnData['user']['password_changed'] = $user->init_password === ""?true:false;
 			$returnData['user']['roles'] = array();
 
 

@@ -176,4 +176,44 @@ class ProfessorController extends \BaseController {
 		//
 	}
 
+	public function modify($facCode, $type) {
+		$faculty = Auth::user()->faculty;
+		$facCode = intval($facCode);
+		
+		$returnData['success'] = false;
+
+		// Verify facCode is same as current user's
+		if($faculty->faculty_code !== $facCode) {
+			$returnData['message'] = 'You are not who you are!';
+			return Response::make(json_encode($returnData), 400);
+		}
+
+		// check what to modify
+		switch ($type) {
+			case 'name':
+				$this->modifyFacultyName($faculty);
+				break;
+
+			case 'free-slot':
+				$this->modifyFacultyFreeSlot($faculty);
+				break;
+			
+			default:
+				case 'cabin-number':
+				$this->modifyFacultyCabin($faculty);
+				break;
+		}
+	}
+
+	public function modifyFacultyName($faculty) {
+
+	}
+
+	public function modifyFacultyFreeSlot($faculty) {
+
+	}
+
+	public function modifyFacultyCabin($faculty) {
+		
+	}
 }
