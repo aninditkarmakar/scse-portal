@@ -30,6 +30,7 @@ class Faculty extends \Eloquent {
 
 			$faculty->user()->delete();
 			$faculty->subjects()->detach();
+			$faculty->freeSlots()->delete();
 
 			return true;
 		});
@@ -45,6 +46,10 @@ class Faculty extends \Eloquent {
 
 	public function getFacultyCodeAttribute($value) {
 		return (int) $value;
+	}
+
+	public function freeSlots() {
+		return $this->hasMany('FacultySlot', 'faculty_id', 'id');
 	}
 
 	public function user() {

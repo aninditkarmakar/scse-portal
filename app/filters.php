@@ -20,6 +20,12 @@ function unauthorizedResponse() {
 |
 */
 
+App::missing(function($exception) {
+	$returnData['success'] = false;
+	$returnData['message'] = "URL Not Found!";
+	return Response::make(json_encode($returnData), 404)->header('Content-Type', 'application/json');
+});
+
 App::before(function($request)
 {
 	//

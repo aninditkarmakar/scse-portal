@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'AddColumnToFacultiesHasSubjectsTable' => $baseDir . '/app/database/migrations/2014_09_27_124216_add_column_to_faculties_has_subjects_table.php',
+    'AddColumnToFacultiesTable' => $baseDir . '/app/database/migrations/2014_10_06_132628_add_column_to_faculties_table.php',
     'AddColumnToProjectsTable' => $baseDir . '/app/database/migrations/2014_10_06_125030_add_column_to_projects_table.php',
     'AddColumnToUsersTable' => $baseDir . '/app/database/migrations/2014_09_22_165809_add_column_to_users_table.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
@@ -32,6 +33,7 @@ return array(
     'ClassPreloader\\Parser\\DirVisitor' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Parser/DirVisitor.php',
     'ClassPreloader\\Parser\\FileVisitor' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Parser/FileVisitor.php',
     'ClassPreloader\\Parser\\NodeTraverser' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Parser/NodeTraverser.php',
+    'CreateFacultiesFreeSlotsTable' => $baseDir . '/app/database/migrations/2014_10_06_131457_create_faculties_free_slots_table.php',
     'CreateFacultiesHasSubjectsTable' => $baseDir . '/app/database/migrations/2014_09_16_170119_create_faculties_has_subjects_table.php',
     'CreateFacultiesTable' => $baseDir . '/app/database/migrations/2014_09_16_164235_create_faculties_table.php',
     'CreateProjectAbstractsTable' => $baseDir . '/app/database/migrations/2014_09_16_165653_create_project_abstracts_table.php',
@@ -59,6 +61,7 @@ return array(
     'Crypt_Twofish' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Crypt/Twofish.php',
     'DatabaseSeeder' => $baseDir . '/app/database/seeds/DatabaseSeeder.php',
     'Faculty' => $baseDir . '/app/models/Faculty.php',
+    'FacultySlot' => $baseDir . '/app/models/FacultySlot.php',
     'FacultySubjectPivot' => $baseDir . '/app/models/FacultySubjectPivot.php',
     'FacultyTableSeeder' => $baseDir . '/app/database/seeds/FacultyTableSeeder.php',
     'Faker\\Documentor' => $vendorDir . '/fzaninotto/faker/src/Faker/Documentor.php',

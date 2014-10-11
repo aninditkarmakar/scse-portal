@@ -48,6 +48,8 @@ Route::group(array('after' => 'json-header'), function() {
 			// Route::get('testprofessor', function() {
 			// 	return "professor";
 			// });
+			Route::pattern('facCode', '[0-9]+');
+			Route::post('professor/{facCode}/modify/{type}', array('as' => 'modify-professor', 'uses' => 'ProfessorController@modify'));
 
 		});
 
