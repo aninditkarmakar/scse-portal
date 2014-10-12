@@ -129,4 +129,38 @@ class LoginController extends \BaseController {
 		return Response::make(json_encode($returnData), 200);
 	}
 
+	public function loginPage() {
+		return View::make('login');
+	}
+
+	public function doLogin() {
+		$credentials['username'] = Input::get('username');
+		$credentials['password'] = Input::get('password');
+
+		$rules = array(
+				'username'=>'required',
+				'password'=>'required|min:6'
+			);
+		$validator = Validator::make($credentials, $rules);
+
+		if($validator->fails()) {
+			return Redirect::route('login-page')->withErrors($validator)->withInput();
+		}
+
+		if(Auth::attempt($credentials)) {
+			return Redirect::intended('admin-dashboard');
+		} else {
+			$errors = array(
+					'message'=>'Invalid Credentials'
+				);
+			return Redirect::route('login-page')->withErrors($errors)->withInput();
+		}
+	}
+
+	public function doLogout() {
+		Auth::logout();
+
+		return Redirect::route('home');
+	}
+
 }

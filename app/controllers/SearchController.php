@@ -272,4 +272,8 @@ class SearchController extends \BaseController {
 
 	// 	return json_encode($ID);
 	// }
+
+	public function searchPage() {
+		return View::make('search');
+	}
 }

@@ -11,28 +11,57 @@
 |
 */
 
-// Route::get('/', array('as'=>'home', function()
-// {
-// 	return View::make('home');
-// }));
+Route::group(array('before' => 'auth'), function() {
 
-// Route::get('/delete', function() {
-// 	$user = User::where('username','like','10010')->firstOrFail();
-	
-// 	if(!$user->delete())
-// 		return 'false';
+});
 
-// 	return 'true';
-// });
+Route::get('/', array('as' => 'home', function() {
+	return View::make('home');
+}));
 
-// Route::get('search/id', array('as' => 'search-id', 'uses' => 'SearchController@searchID'));
+Route::group(array('before'=>'auth'), function() {
+	Route::group(array('before'=>'auth-admin', 'prefix'=>'admin'), function() {
 
+		Route::get('/', array('as'=>'admin-dashboard','uses'=>'AdminController@landingPage'));
+		Route::get('add-professor', array('as'=>'add-professor', 'uses'=>'AdminController@addProfessorPage'));
+		Route::post('add-professor', array('as'=>'add-professor-post', 'uses'=>'ProfessorController@addProfessor'));
+		
+
+		Route::get('delete-professor/{id}', function($id) {
+			User::where('username','=',$id)->first()->delete();
+			return 'true';
+		});
+	});
+
+	Route::group(array('before'=>'auth-professor', 'prefix'=>'professor'), function() {
+
+		Route::get('/', array('as'=>'professor-profile', 'uses'=>'ProfessorController@profilePage'));
+		Route::get('edit', array('as'=>'professor-profile-edit', 'uses'=>'ProfessorController@editPage'));
+		Route::post('edit', array('as'=>'professor-edit-post', 'uses'=>'ProfessorController@doEdit'));
+	});
+});
+
+Route::get('login', array('as'=>'login-page', 'uses'=>'LoginController@loginPage'));
+Route::post('login', array('as'=>'login-post', 'uses'=>'LoginController@doLogin'));
+
+Route::get('logout', array('as'=>'logout', 'uses'=>'LoginController@doLogout'));
+
+Route::get('search', array('as'=>'search', 'uses'=>'SearchController@searchPage'));
+
+
+
+//--------------------------------------------------------------------------------------------------------------
+
+
+/**
+ * ------------------------------------------API -------------------------
+ */
 Route::group(array('after' => 'json-header', 'prefix'=>'api'), function() {
 
 	// All routes that require authentication
-	Route::group(array('before' => 'auth'), function(){
+	Route::group(array('before' => 'api-auth'), function(){
 
-		Route::group(array('before' => 'auth-admin'), function() {
+		Route::group(array('before' => 'api-auth-admin'), function() {
 
 			// Route::get('testadmin', function() {
 			// 	return "admin";
@@ -42,7 +71,7 @@ Route::group(array('after' => 'json-header', 'prefix'=>'api'), function() {
 
 		});
 
-		Route::group(array('before' => 'auth-professor'), function() {
+		Route::group(array('before' => 'api-auth-professor'), function() {
 
 			// Route::get('testprofessor', function() {
 			// 	return "professor";
@@ -54,38 +83,7 @@ Route::group(array('after' => 'json-header', 'prefix'=>'api'), function() {
 
 	});
 
-	// Route::get('test', function() {
-	// 	$fac = Faculty::where('id','=', 2)->with('subjects')->first();
-	// 	$semIds = [];
-
-	// 	foreach($fac->subjects as $subject) {
-	// 		$subject->setHidden(['pivot', 'id']);
-	// 		array_push($semIds, $subject->pivot->semester_id);
-	// 	}
-
-	// 	$sems = Semester::whereIn('id', $semIds)->get();
-
-	// 	$semesters = array();
-
-	// 	foreach($sems as $sem) {
-	// 		$semesters[$sem->id] = array(
-	// 				'name' => $sem->type.' '.$sem->start_year.'-'.$sem->end_year,
-	// 				'type' => $sem->type,
-	// 				'start' => $sem->start_year,
-	// 				'end' => $sem->end_year,
-	// 			);
-	// 	}
-
-	// 	foreach($fac->subjects as $subject) {
-	// 		$subject->semester = $semesters[$subject->pivot->semester_id];
-	// 	}
-
-	// 	$queries = DB::getQueryLog();
-
-	// 	return Response::make(json_encode($fac));
-	// });
-
-	Route::get('logout', array('as' => 'logout', 'uses' => 'LoginController@logout'));
+	Route::get('logout', array('as' => 'api-logout', 'uses' => 'LoginController@logout'));
 
 	Route::resource('login', 'LoginController');
 	

@@ -1,34 +1,28 @@
 @extends('layouts.master')
 
-@section('page-title')
-	<title>Login | SCSE Portal | VIT</title>
-@stop
-
-@section('topbar')
-	@include('layouts.topbar')
-@stop
-
-@section('content')
-
-<div class="row container">
-	<div class="small-12 medium-8 medium-offset-2 columns">
-		<h1>Login</h1>
-		@if(Session::has('login-error'))
-			<span class="error-message">{{ Session::pull('login-error') }}</span>
-		@endif
-		{{ Form::open(array('route'=>'login.store', 'method'=>'post')) }}
-			{{ Form::text('faculty_code', null, array('placeholder' => 'Faculty code')) }}
-			{{ Form::password('password', array('placeholder' => 'Password')) }}
-			<div class="text-center">
-				{{ Form::submit('Login', array('class'=>'button')) }}
-			</div>				
+@section('body')
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-md-6 col-md-offset-3">
+			<h3 class="text-muted">Login</h3>
+		</div>
+		{{ Form::open(array('route'=>'login-post', 'method'=>'post')) }}
+			<div class="col-xs-12 col-md-6 col-md-offset-3">
+				@foreach($errors->all() as $message)
+					<div class="alert alert-danger" role="alert">{{ $message }}</div>
+				@endforeach
+				<div class="form-group">
+					{{ Form::text('username',null, array('class'=>'form-control', 'placeholder'=>'Username', 'required'=>'required')) }}	
+				</div>
+				<div class="form-group">
+					{{ Form::password('password', array('class'=>'form-control', 'placeholder'=>'Password', 'required'=>'required')) }}	
+				</div>
+				<div class="text-center">
+					{{ Form::submit('Login', array('class'=>'btn btn-primary')) }}
+					<!--<button type="submit" class="btn btn-primary" class="form-control">Login</button>-->
+				</div>
+			</div>
 		{{ Form::close() }}
 	</div>
 </div>
-
-@stop
-
-@section('bottom-scripts')
-
-</script>
 @stop

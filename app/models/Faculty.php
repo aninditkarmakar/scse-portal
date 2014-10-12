@@ -64,5 +64,50 @@ class Faculty extends \Eloquent {
 		return $this->hasMany('Project', 'faculty_id', 'id');
 	}
 
+	public function specializations() {
+		return $this->hasMany('Specialization', 'faculty_id', 'id');
+	}
+
+	public function getFreeSlots() {
+		$slots = $this->freeSlots;
+		$return = array();
+
+		foreach($slots as $slot) {
+			$item['day'] = $slot->day;
+
+			if($slot->from_time > 12) {
+				$item['fromTime'] = ($slot->from_time - 12).'pm';
+			} else {
+				$item['fromTime'] = ($slot->from_time).'am';
+			}
+
+			if($slot->to_time > 12) {
+				$item['toTime'] = ($slot->to_time - 12).'pm';
+			} else {
+				$item['toTime'] = ($slot->to_time).'am';
+			}
+
+			$item['from'] = $slot->from_time;
+			$item['to'] = $slot->to_time;
+
+			array_push($return, $item);
+		}
+
+		return $return;
+	}
+
+	public function getSpecializations() {
+		$specs = $this->specializations;
+
+		$data = array();
+
+		foreach($specs as $spec) {
+			$item['value'] = $spec->specialization;
+
+			array_push($data, $item);
+		}
+
+		return $data;
+	} 
 	
 }

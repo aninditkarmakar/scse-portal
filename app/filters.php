@@ -20,11 +20,11 @@ function unauthorizedResponse() {
 |
 */
 
-App::missing(function($exception) {
-	$returnData['success'] = false;
-	$returnData['message'] = "URL Not Found!";
-	return Response::make(json_encode($returnData), 404)->header('Content-Type', 'application/json');
-});
+// App::missing(function($exception) {
+// 	$returnData['success'] = false;
+// 	$returnData['message'] = "URL Not Found!";
+// 	return Response::make(json_encode($returnData), 404)->header('Content-Type', 'application/json');
+// });
 
 App::before(function($request)
 {
@@ -52,7 +52,53 @@ App::after(function($request, $response)
 |
 */
 
-Route::filter('auth', function()
+Route::filter('auth', function() {
+	if(Auth::guest()) {
+		return Redirect::guest('login');
+	}
+});
+
+Route::filter('auth-admin', function() {
+	if (Auth::guest())
+	{
+		return 'Not Authorized';
+	} else {
+		$user = Auth::user();
+		$flag = 0;
+		foreach($user->roles as $role) {
+			if($role['role'] === 'admin') {
+				$flag = 1;
+				break;
+			}
+		}
+
+		if($flag === 0) {
+			return 'Not Authorized as Admin';
+		} 
+	}
+});
+
+Route::filter('auth-professor', function() {
+	if (Auth::guest())
+	{
+		return 'Not Authorized';
+	} else {
+		$user = Auth::user();
+		$flag = 0;
+		foreach($user->roles as $role) {
+			if($role['role'] === 'professor') {
+				$flag = 1;
+				break;
+			}
+		}
+
+		if($flag === 0) {
+			return 'Not Authorized as Professor';
+		} 
+	}
+});
+
+Route::filter('api-auth', function()
 {
 	if (Auth::guest())
 	{
@@ -60,7 +106,7 @@ Route::filter('auth', function()
 	}
 });
 
-Route::filter('auth-admin', function() {
+Route::filter('api-auth-admin', function() {
 	// $returnData = array(
 	// 	"success" => false,
 	// 	"message" => 'Unauthorized',
@@ -86,7 +132,7 @@ Route::filter('auth-admin', function() {
 
 });
 
-Route::filter('auth-professor', function() {
+Route::filter('api-auth-professor', function() {
 	if (Auth::guest())
 	{
 		return unauthorizedResponse();

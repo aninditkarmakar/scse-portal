@@ -1,45 +1,43 @@
+<?php 
+	$routeName = Route::currentRouteName(); 
+?>
+
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	@section('page-title')
-	<title>Master</title>
-	@show
+	<meta charset="utf-8">
+	<title></title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width">
 
-	{{ HTML::style('css/foundation.css') }}
-	{{ HTML::style('css/style.css') }}
-
-	@section('stylesheets')
-
-	@show
-	{{ HTML::script('js/vendor/modernizr.js') }}
-
-	@section('top-scripts')
+	<script src="{{asset('js/jquery.min.js')}}"></script>
+	<script src="{{asset('js/bootstrap.min.js')}}"></script>
+	<script src="{{asset('js/modernizr.js')}}"></script>
+	@section('header-scripts')
 
 	@show
+
+	<link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/normalize.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/main.css') }}">
 </head>
+
 <body>
-	@section('topbar')
+	<div class="container">
+		@section('header')
+			@include('layouts.header')
+		@show
 
-	@show
-
-	<div class="content">
-		@section('content')
+		@section('body')
 
 		@show
+
+		@section('footer')
+		<p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
+		@show
 	</div>
-	@section('footer')
 
-	@show
-
-	{{ HTML::script('js/vendor/jquery.js') }}
-	{{ HTML::script('js/foundation.min.js') }}
-	<script>
-		$(document).foundation();
-	</script>
-	@section('bottom-scripts')
+	@section('scripts')
 
 	@show
 </body>
-</html>

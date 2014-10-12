@@ -41,6 +41,17 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
 		return $this->hasOne('Faculty', 'user_id', 'id');
 	}
 
-	
+	public function hasRole($check) {
+		$roles = $this->roles->toArray();
+		return in_array($check, array_fetch($roles, 'role'));
+	}
+
+	public function isAdmin() {
+		return $this->hasRole('admin');
+	}
+
+	public function isProfessor() {
+		return $this->hasRole('professor');
+	}
 
 }
