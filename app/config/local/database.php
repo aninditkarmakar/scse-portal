@@ -25,7 +25,7 @@ return array(
 			'host'      => 'localhost',
 			'database'  => 'scse',
 			'username'  => 'root',
-			'password'  => 'anindit',
+			'password'  => '',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',

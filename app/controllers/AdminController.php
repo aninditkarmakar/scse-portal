@@ -91,4 +91,8 @@ class AdminController extends \BaseController {
 	public function addProfessorPage() {
 		return View::make('admin.addProfessor');
 	}
+
+	public function addStudentPage() {
+		return View::make('admin.addStudent');
+	}
 }
