@@ -1,7 +1,7 @@
 @section('searchbox')
 <div class="form-group">
 	<div id="remote">
-		<input class="typeahead form-control" type="text" placeholder="Enter search term"/>
+		<input class="typeahead form-control" type="text" id="search_input" placeholder="Enter search term"/>
 	</div>
 </div>
 @stop
@@ -40,8 +40,14 @@
 			return $.get(''+searchUrl, { q: query }, function (data) {
 			    return process(data.data);
 			});
-		}
+		},
 	  // source: results.ttAdapter()
+	});
+
+	$('#search_input').bind('typeahead:selected', function(obj, datum, name) {      
+        console.log(datum.id);
+        var baseUrl = "{{ URL::to('/') }}"
+        window.location =baseUrl+'/show-professor/'+datum.id;
 	});
 </script>
 @stop

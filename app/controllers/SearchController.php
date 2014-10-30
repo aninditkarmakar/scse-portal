@@ -276,4 +276,18 @@ class SearchController extends \BaseController {
 	public function searchPage() {
 		return View::make('search');
 	}
+
+	public function searchStudentRegNo() {
+		if(!Input::has('q'))
+			return json_encode(array());
+
+		$searchTerm = Input::get('q').'%';
+
+		
+		$students = Student::where('reg_no','like',$searchTerm)->take(5)->get();
+
+		$returnData = array('data'=>$students->toArray());
+
+		return json_encode($returnData);
+	}
 }

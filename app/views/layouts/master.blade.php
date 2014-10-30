@@ -37,6 +37,10 @@
 		@show
 	</div>
 
+	@section('modals')
+
+	@show
+
 	@section('scripts')
 
 	@show

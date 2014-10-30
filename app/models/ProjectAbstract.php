@@ -8,6 +8,6 @@ class ProjectAbstract extends \Eloquent {
 	public $timestamps = false;
 
 	public function project() {
-		return $this->belongsTo('Project', 'project_id');
+		return $this->belongsTo('Project', 'project_id', 'id');
 	}
 }

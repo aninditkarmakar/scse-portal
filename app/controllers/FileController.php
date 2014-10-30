@@ -1,10 +1,10 @@
 <?php
 
-class AdminController extends \BaseController {
+class FileController extends \BaseController {
 
 	/**
 	 * Display a listing of the resource.
-	 * GET /admin
+	 * GET /file
 	 *
 	 * @return Response
 	 */
@@ -15,7 +15,7 @@ class AdminController extends \BaseController {
 
 	/**
 	 * Show the form for creating a new resource.
-	 * GET /admin/create
+	 * GET /file/create
 	 *
 	 * @return Response
 	 */
@@ -26,7 +26,7 @@ class AdminController extends \BaseController {
 
 	/**
 	 * Store a newly created resource in storage.
-	 * POST /admin
+	 * POST /file
 	 *
 	 * @return Response
 	 */
@@ -37,7 +37,7 @@ class AdminController extends \BaseController {
 
 	/**
 	 * Display the specified resource.
-	 * GET /admin/{id}
+	 * GET /file/{id}
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -49,7 +49,7 @@ class AdminController extends \BaseController {
 
 	/**
 	 * Show the form for editing the specified resource.
-	 * GET /admin/{id}/edit
+	 * GET /file/{id}/edit
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -61,7 +61,7 @@ class AdminController extends \BaseController {
 
 	/**
 	 * Update the specified resource in storage.
-	 * PUT /admin/{id}
+	 * PUT /file/{id}
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -73,7 +73,7 @@ class AdminController extends \BaseController {
 
 	/**
 	 * Remove the specified resource from storage.
-	 * DELETE /admin/{id}
+	 * DELETE /file/{id}
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -84,15 +84,9 @@ class AdminController extends \BaseController {
 	}
 
 
-	public function landingPage() {
-		return View::make('admin.dashboard');
-	}
-
-	public function addProfessorPage() {
-		return View::make('admin.addProfessor');
-	}
-
-	public function addStudentPage() {
-		return View::make('admin.addStudent');
-	}
+	public function getProjectPDF($filename) {
+		dd("here");
+		$filePath = base_path().'/user_files/faculty/projects/'.$filename;
+		return Response::download($file, '$filename.pdf', array('Content-Type: application/pdf'));
+	} 
 }

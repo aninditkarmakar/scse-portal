@@ -178,4 +178,10 @@ body {
     height: 100%;
     display: none;
   }
+
+  .addon {
+    background-color: #DB3802;
+    color: #fff;
+    cursor: pointer;
+  }
 }

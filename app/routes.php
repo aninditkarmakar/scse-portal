@@ -11,13 +11,14 @@
 |
 */
 
-Route::group(array('before' => 'auth'), function() {
-
-});
-
 Route::get('/', array('as' => 'home', function() {
 	return View::make('home');
 }));
+
+Route::get('show-professor/{id}', array('as'=>'show-professor-profile', 'uses'=>'ProfessorController@profilePage'));
+
+// Route::group(array('prefix'=>'user_files/faculty'), function() {
+// });
 
 Route::group(array('before'=>'auth'), function() {
 	Route::group(array('before'=>'auth-admin', 'prefix'=>'admin'), function() {
@@ -38,6 +39,13 @@ Route::group(array('before'=>'auth'), function() {
 		Route::get('/', array('as'=>'professor-profile', 'uses'=>'ProfessorController@profilePage'));
 		Route::get('edit', array('as'=>'professor-profile-edit', 'uses'=>'ProfessorController@editPage'));
 		Route::post('edit', array('as'=>'professor-edit-post', 'uses'=>'ProfessorController@doEdit'));
+
+		Route::get('add-project', array('as'=>'professor-add-project', 'uses'=>'ProfessorController@showAddProjectPage'));
+		Route::post('add-project', array('as'=>'professor-add-project-post', 'uses'=>'ProfessorController@addProject'));
+		
+		Route::get('edit-project/{id}', array('as'=>'professor-edit-project', 'uses'=>'ProjectController@editProjectPage'));
+		Route::post('edit-project/{id}', array('as'=>'professor-edit-project-post', 'uses'=>'ProjectController@editProject'));
+		// Route::get
 	});
 });
 
@@ -48,8 +56,14 @@ Route::get('logout', array('as'=>'logout', 'uses'=>'LoginController@doLogout'));
 
 Route::get('search', array('as'=>'search', 'uses'=>'SearchController@searchPage'));
 
+Route::get('user_files/faculty/projects/{$filename}', array('as'=>'project-pdf-download', 'uses'=>'FileController@getProjectPDF'));
 
-
+// Route::get('user_files/faculty/projects/{$id}', function($id) {
+// 	dd($id);
+// });
+Route::get('blabla', function() {
+	return "ab";
+});
 //--------------------------------------------------------------------------------------------------------------
 
 
@@ -98,5 +112,7 @@ Route::group(array('after' => 'json-header', 'prefix'=>'api'), function() {
 	Route::get('search/subject-name', array('as' => 'search-subject-name', 'uses' => 'SearchController@searchSubjectName'));
 
 	Route::get('search/subject-code', array('as' => 'search-subject-code', 'uses' => 'SearchController@searchSubjectCode'));
+
+	Route::get('search/student-regno', array('as'=> 'search-student-regno', 'uses'=>'SearchController@searchStudentRegNo'));
 
 });

@@ -1,5 +1,6 @@
 logs/*
 app-old/*
+user_files/*
 composer.phar
 composer.lock
 .env.*.php

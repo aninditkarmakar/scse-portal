@@ -230,9 +230,11 @@ class ProfessorController extends \BaseController {
 		}
 
 		if(! is_null($facCode) && $faculty->id === intval($facCode)) {
-			$data['myPage'] = false;
+
+			$data['myPage'] = true;
 		} else if(! is_null($facCode)) {
-			$faculty = Faculty::where('faculty_code', '=', intval($facCode))->first();
+			$data['myPage'] = false;
+			$faculty = Faculty::where('id', '=', intval($facCode))->first();
 		}
 
 		$data['firstName'] = $faculty->firstname;
@@ -241,8 +243,12 @@ class ProfessorController extends \BaseController {
 
 		$freeSlots = $faculty->getFreeSlots();
 		$data['freeSlots'] = $freeSlots;
-
 		$data['specializations'] = $faculty->getSpecializations();
+
+
+		$projects = Project::with('projectAbstract')->where('faculty_id','=',$faculty->id)->get();
+
+		$data['projects'] = $projects->toArray();
 
 		return View::make('professor.profile')->with('details', $data);
 	}
@@ -412,5 +418,127 @@ class ProfessorController extends \BaseController {
 
 		$returnData['success'] = true;
 		return Response::make(json_encode($returnData), 200)->header('Content-Type', 'application/json');
+	}
+
+	public function showProfile($id) {
+		$faculty = Faculty::find($id);
+
+		$data = array(
+			'myPage' => false
+		);
+
+		// if(! $user->isProfessor()) {
+		// 	return 'Not Authorized as professor';
+		// }
+
+		// if(! is_null($facCode) && $faculty->id === intval($facCode)) {
+		// 	$data['myPage'] = false;
+		// } else if(! is_null($facCode)) {
+		// 	$faculty = Faculty::where('faculty_code', '=', intval($facCode))->first();
+		// }
+
+		$data['firstName'] = $faculty->firstname;
+		$data['lastName'] = $faculty->lastname;
+		$data['name'] = $data['firstName'].' '.$data['lastName'];
+
+		$freeSlots = $faculty->getFreeSlots();
+		$data['freeSlots'] = $freeSlots;
+
+		$data['specializations'] = $faculty->getSpecializations();
+
+		return View::make('professor.profile')->with('details', $data);
+	}
+
+	public function showAddProjectPage() {
+		$projectTypes = ProjectType::all()->toArray();
+
+		return View::make('professor.addProject', array('project_types'=>$projectTypes));
+	}
+
+	public function addProject() {
+		$basePath = base_path();
+		$faculty = Auth::user()->faculty;
+		$maxFileSize = 10; //MB
+
+		$info['title'] = Input::get('title');
+		$info['abstract'] = Input::get('abstract');
+		$info['student_ids'] = explode(', ',Input::get('student_ids'));
+		
+		array_pop($info['student_ids']);
+
+		$info['type'] = Input::get('type');
+		$info['start_date'] = Input::get('start_date');
+		$info['end_date'] = Input::get('end_date');
+
+		$rules = array(
+				'title'=>'required',
+				'abstract'=>'required',
+				'student_ids' => 'required',
+				'type'=>'required',
+				'start_date' => 'required',
+				'end_date' => 'required',
+			);
+		$validator = Validator::make($info, $rules);
+
+		if($validator->fails()) {
+			return Redirect::route('professor-add-project')->withErrors($validator)->withInput();
+		}
+
+		if(!Input::hasFile('file')) {
+			return Redirect::route('professor-add-project')->withErrors(['message'=>'No file selected'])->withInput();
+		}
+
+		$file = Input::file('file');
+
+		if($file->getSize() > $maxFileSize*1024*1024) {
+			return Redirect::route('professor-add-project')->withErrors(['message'=>'Filesize should be less than '.$maxFileSize.'MB'])->withInput();
+		}
+
+		if($file->getClientOriginalExtension() !== 'pdf') {
+			return Redirect::route('professor-add-project')->withErrors(['message'=>'File should be in PDF format'])->withInput();
+		}
+
+		
+		$info['file_name'] = $faculty->id.'_'.str_replace(' ', '_', $info['title']).'.pdf';
+
+		$filePath = $basePath.'/user_files/faculty/projects/';
+
+		$file->move($filePath, $info['file_name']);
+
+		DB::beginTransaction();
+
+		try {
+			$project = new Project();
+			$project->title = $info['title'];
+			$project->type_id = $info['type'];
+			$project->faculty_id = $faculty->id;
+			$project->start_date = $info['start_date'];
+			$project->end_date = $info['end_date'];
+			$project->filename = $info['file_name'];
+
+			$project->save();
+
+			$pivotInfo = array();
+			foreach($info['student_ids'] as $id) {
+				array_push($pivotInfo, array('student_id'=>intval($id), 'project_id'=>$project->id));
+			}
+
+			$abstract = new ProjectAbstract();
+			$abstract->abstract = $info['abstract'];
+			$abstract->project_id = $project->id;
+
+			$abstract->save();		
+
+			if((count($pivotInfo)>0)) {				
+				DB::table('students_has_projects')->insert($pivotInfo);
+			}
+		} catch(\Exception $e) {
+			DB::rollback();
+			dd($e->getMessage());
+		}
+
+		DB::commit();
+
+		return Redirect::route('professor-profile');
 	}
 }
