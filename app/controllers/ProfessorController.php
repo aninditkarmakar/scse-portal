@@ -126,24 +126,37 @@ class ProfessorController extends \BaseController {
 		
 	}
 
-	public function profilePage($facCode = null) {
-		$user = Auth::user();
-		$faculty = $user->faculty;
+	public function profilePage($id = null) {
+		$faculty = null;
+		$user = null;
 
 		$data = array(
-			'myPage' => true
+			'myPage' => false
 		);
 
-		if(! $user->isProfessor()) {
-			return 'Not Authorized as professor';
-		}
+		if($id !== null) {
+			$faculty = Faculty::find($id);
+			$user = $faculty->user;
 
-		if(! is_null($facCode) && $faculty->id === intval($facCode)) {
+			if(Auth::check()) {
+				if(Auth::user()->faculty->id === intval($id)) {
+					$data['myPage'] = true;
+				}
+			}
+		} else {
+			$user = Auth::user();
+			$faculty = $user->faculty;
+
+			if(! $user->isProfessor()) {
+				return 'Not Authorized as professor';
+			}
 
 			$data['myPage'] = true;
-		} else if(! is_null($facCode)) {
-			$data['myPage'] = false;
-			$faculty = Faculty::where('id', '=', intval($facCode))->first();
+			// if(($faculty->id === )!is_null($id) && $faculty->id === intval($id)) {
+			// 	$data['myPage'] = true;
+			// } else {
+			// 	$data['myPage'] = false;
+			// }
 		}
 
 		$data['firstName'] = $faculty->firstname;
