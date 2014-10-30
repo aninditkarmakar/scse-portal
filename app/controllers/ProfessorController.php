@@ -149,11 +149,15 @@ class ProfessorController extends \BaseController {
 		$data['firstName'] = $faculty->firstname;
 		$data['lastName'] = $faculty->lastname;
 		$data['name'] = $data['firstName'].' '.$data['lastName'];
+		$data['email'] = $user->email;
 
 		$freeSlots = $faculty->getFreeSlots();
 		$data['freeSlots'] = $freeSlots;
 		$data['specializations'] = $faculty->getSpecializations();
 
+		$data['designation'] = $faculty->designation;
+		$data['about_me'] = $faculty->about_me;
+		$data['mobile_no'] = $faculty->mobile_no;
 
 		$projects = Project::with('projectAbstract')->where('faculty_id','=',$faculty->id)->get();
 
@@ -168,6 +172,8 @@ class ProfessorController extends \BaseController {
 		$data['lastName'] = Input::get('last_name');
 		$data['email'] = Input::get('email');
 		$data['cabin'] = Input::get('cabin');
+		$data['designation'] = Input::get('designation');
+		$data['mobile_no'] = Input::get('mobile_no');
 
 		$rules = array(
 			'facCode' => 'required|digits:5|unique:faculties,faculty_code',
@@ -175,6 +181,8 @@ class ProfessorController extends \BaseController {
 			'lastName' => 'required|alpha',
 			'email' => 'required|unique:users,email',
 			'cabin' => 'required|alpha_dash',
+			'designation' => 'required',
+			'mobile_no' => 'required|numeric|digits:10',
 			);
 
 		$messages = array(
@@ -206,6 +214,8 @@ class ProfessorController extends \BaseController {
 		$faculty->lastname = ucfirst($data['lastName']);
 		$faculty->faculty_code = $data['facCode'];
 		$faculty->cabin = strtoupper($data['cabin']);
+		$faculty->designation = $data['designation'];
+		$faculty->mobile_no = $data['mobile_no'];
 
 		try {
 				DB::connection()->getPdo()->beginTransaction();
@@ -269,6 +279,9 @@ class ProfessorController extends \BaseController {
 		$data['firstName'] = $faculty->firstname;
 		$data['lastName'] = $faculty->lastname;
 		$data['name'] = $data['firstName'].' '.$data['lastName'];
+		$data['cabin'] = $faculty->cabin;
+		$data['mobile_no'] = $faculty->mobile_no;
+		$data['about_me'] = $faculty->about_me;
 
 		$freeSlots = $faculty->getFreeSlots();
 		$data['freeSlots'] = $freeSlots;
@@ -295,6 +308,21 @@ class ProfessorController extends \BaseController {
 		if(!isset($input['freeSlots']) || !isset($input['specializations'])) {
 			return Response::make(json_encode($returnData), 400)->header('Content-Type', 'application/json');
 		}
+
+		if(!isset($input['cabin'])) {
+			return Response::make(json_encode($returnData), 400)->header('Content-Type', 'application/json');
+		} else {
+			$faculty->cabin = $input['cabin'];
+		}
+
+		if(isset($input['about_me'])) {
+			$faculty->about_me = $input['about_me'];
+		}
+
+		if(isset($input['mobile_no'])) {
+			$faculty->mobile_no = $input['mobile_no'];
+		}
+
 		DB::connection()->getPdo()->beginTransaction();
 
 		try{
@@ -319,6 +347,7 @@ class ProfessorController extends \BaseController {
 
 			$faculty->save();
 		} catch(\PDOException $e) {
+			DB::connection()->getPdo()->rollback();
 			$returnData['message'] = $e->getMessage();
 			return Response::make(json_encode($returnData), 400)->header('Content-Type', 'application/json');
 		} 
@@ -327,35 +356,6 @@ class ProfessorController extends \BaseController {
 
 		$returnData['success'] = true;
 		return Response::make(json_encode($returnData), 200)->header('Content-Type', 'application/json');
-	}
-
-	public function showProfile($id) {
-		$faculty = Faculty::find($id);
-
-		$data = array(
-			'myPage' => false
-		);
-
-		// if(! $user->isProfessor()) {
-		// 	return 'Not Authorized as professor';
-		// }
-
-		// if(! is_null($facCode) && $faculty->id === intval($facCode)) {
-		// 	$data['myPage'] = false;
-		// } else if(! is_null($facCode)) {
-		// 	$faculty = Faculty::where('faculty_code', '=', intval($facCode))->first();
-		// }
-
-		$data['firstName'] = $faculty->firstname;
-		$data['lastName'] = $faculty->lastname;
-		$data['name'] = $data['firstName'].' '.$data['lastName'];
-
-		$freeSlots = $faculty->getFreeSlots();
-		$data['freeSlots'] = $freeSlots;
-
-		$data['specializations'] = $faculty->getSpecializations();
-
-		return View::make('professor.profile')->with('details', $data);
 	}
 
 	public function showAddProjectPage() {
@@ -448,6 +448,31 @@ class ProfessorController extends \BaseController {
 
 		DB::commit();
 
+		return Redirect::route('professor-profile');
+	}
+
+	public function deleteProject($id) {
+		$project = Project::find($id);
+		$faculty = Auth::user()->faculty;
+
+		if(intval($project->faculty_id) !== $faculty->id) {
+			return Redirect::route('professor-profile')->withErrors(['message'=>'That is not your project!']);
+		}
+
+		DB::beginTransaction();
+
+		try {
+			$project->project_abstract->delete();
+			$project->students()->delete();
+			$project->tags()->delete();
+			$project->delete();
+		} catch (\PDOException $e) {
+			DB::rollback();
+			return Redirect::route('professor-edit-project', array('id'=>$project->id))->withErrors(['message'=>'There was an error deleting the project.']);
+		}
+
+		DB::commit();
+		
 		return Redirect::route('professor-profile');
 	}
 }

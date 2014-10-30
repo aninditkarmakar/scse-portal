@@ -90,6 +90,7 @@
 					<div class="form-group">
 						<div class="col-sm-12 text-center">
 							{{ Form::submit('Add it', array('class'=>'btn btn-lg btn-primary')) }}
+							<a href="{{ route('professor-profile') }}" class="btn btn-lg btn-danger">CANCEL</a>
 						</div>
 					</div>
 				{{ Form::close() }}

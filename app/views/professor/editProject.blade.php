@@ -91,7 +91,9 @@
 					
 					<div class="form-group">
 						<div class="col-sm-12 text-center">
-							{{ Form::submit('Save', array('class'=>'btn btn-lg btn-primary')) }}
+							{{ Form::submit('Save', array('class'=>'btn btn-lg btn-success')) }}
+							<a href="{{ route('professor-delete-project', ['id'=>$info['id']]) }}" class="btn btn-lg btn-danger">DELETE</a>
+							<a href="{{ route('professor-profile') }}" class="btn btn-lg btn-primary">Cancel</a>
 						</div>
 					</div>
 				{{ Form::close() }}

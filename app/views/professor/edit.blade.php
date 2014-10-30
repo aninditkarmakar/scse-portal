@@ -128,6 +128,20 @@
 					<input type="text" class="form-control" rv-value="details.lastName" placeholder="First Name"/>
 				</div>
 			</div>
+			
+			<div class="col-sm-6 form-group">
+				<label for="cabin" class="col-sm-4 control-label">Cabin</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" rv-value="details.cabin" placeholder="Cabin" />
+				</div>
+			</div>
+
+			<div class="col-sm-6 form-group">
+				<label for="mobile" class="col-sm-2 control-label">Mobile</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" rv-value="details.mobile_no" placeholder="Mobile (No leading zero)" />
+				</div>
+			</div>
 
 			<div class="form-group">
 				<label class="col-sm-2 control-label">Free Slots</label>
@@ -184,8 +198,16 @@
 				<br/>
 			</div>
 
+			<div class="form-group">
+				<label for="about_me" class="col-sm-2 control-label">About Me</label>
+				<div class="col-sm-10">
+					<textarea class="form-control" rv-value="details.about_me" placeholder="About Me"></textarea>
+				</div>
+			</div>
+
 			<div class="form-group text-center">
 				<a href="#" class="btn btn-success" rv-on-click="controller.save">SAVE</a>
+				<a href="#" class="btn btn-danger" rv-on-click="controller.cancel">CANCEL</a>
 			</div>
 		</form>
 		</div>
@@ -243,6 +265,10 @@
 				},
 				timeout: 20000
 			});
+		},
+
+		cancel: function(event, object) {
+			window.location = "{{ route('professor-profile') }}";
 		}
 	} 
 
@@ -250,6 +276,9 @@
 	model.lastName = details.lastName+'';
 	model.freeSlots = details.freeSlots;
 	model.specializations = details.specializations;
+	model.cabin = details.cabin;
+	model.mobile_no = details.mobile_no;
+	model.about_me = details.about_me;
 
 	var view = rivets.bind($('#editForm'), {
 		details: model,

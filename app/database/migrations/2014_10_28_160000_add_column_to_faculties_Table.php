@@ -12,9 +12,10 @@ class AddColumnToFacultiesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::table('faculties_Table', function(Blueprint $table)
+		Schema::table('faculties', function(Blueprint $table)
 		{
-			$table->string('designation', 45)->nullable();
+			$table->string('designation', 45)->after('user_id')->nullable();
+			$table->string('mobile_no')->after('user_id')->nullable();
 		});
 	}
 
@@ -26,9 +27,10 @@ class AddColumnToFacultiesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table('faculties_Table', function(Blueprint $table)
+		Schema::table('faculties', function(Blueprint $table)
 		{
-			
+			$table->dropColumn('designation');
+			$table->dropColumn('mobile_no');
 		});
 	}
 

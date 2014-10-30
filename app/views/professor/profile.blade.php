@@ -1,5 +1,6 @@
 <?php 
 	$data = $details;
+	$scholar_link = urlencode($data['name'].' VIT University');
 ?>
 @extends('layouts.master')
 @section('body')
@@ -26,8 +27,11 @@
 	<hr style="margin: 15px"/>
 
 	<div class="row">
-
+		
 		<div class="col-xs-12 text-center">
+			@foreach($errors->all() as $message)
+				<div class="alert alert-danger" role="alert">{{ $message }}</div>
+			@endforeach
 			<h3 style="margin-top: 5px">Faculty Details
 				@if($data['myPage'] === true)
 					<a href="{{ route('professor-profile-edit') }}" ><i class="glyphicon glyphicon-edit pull-right"></i></a>
@@ -35,7 +39,7 @@
 			</h3>
 		</div>		
 
-		<div ng-hide="edit.detail">
+		<div >
 			<div class="col-xs-12 col-md-8">
 				<div class="row">
 					<div class="col-xs-4">
@@ -45,6 +49,36 @@
 						<span>{{ $data['name'] }}</span>
 					</div>
 				</div>
+				<br/>
+				@if($data['designation'] !== null)
+					<div class="row">
+						<div class="col-xs-4">
+							<span><strong>Designation:</strong></span>
+						</div>
+						<div class="col-xs-8 text-center">
+							<span>{{ $data['designation'] }}</span>
+						</div>
+					</div>
+					<br/>
+				@endif
+				<div class="row">
+					<div class="col-xs-4">
+						<span><strong>Mobile:</strong></span>
+					</div>
+					<div class="col-xs-8 text-center">
+						<span>{{ $data['mobile_no'] }}</span>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-4">
+						<span><strong>Email:</strong></span>
+					</div>
+					<div class="col-xs-8 text-center">
+						<span>{{ $data['email'] }}</span>
+					</div>
+				</div>
+				
 				<br/>
 				<div class="row">
 					<div class="col-xs-4">
@@ -84,6 +118,16 @@
 				<img src="{{asset('images/prof.jpg')}}" class="img-circle"/>
 			</div>
 		</div>
+		@if($data['about_me'] !== null)
+			<hr>
+			<div class="clearfix"></div>
+			<div class="col-xs-12 text-center">
+				<h3>About Me</h3>
+			</div>
+			<div class="col-xs-6 col-md-offset-3 text-center">
+				<span>{{ $data['about_me'] }}</span>
+			</div>
+		@endif
 	</div>
 
 	<div class="row">
@@ -122,7 +166,13 @@
 
 	<div class="row">
 		<div class="col-xs-12 text-center">
-			<h3>Projects</h3>
+			<h3>
+				Projects
+				@if($data['myPage'] === true)
+					<a href="{{ route('professor-add-project') }}"><i class="glyphicon glyphicon-plus pull-right"></i></a>
+				@endif
+			</h3>
+			
 		</div>
 		@if(count($data['projects']) > 0)
 			<div class="col-xs-10 col-xs-offset-1">
@@ -141,7 +191,7 @@
 									<button class="btn btn-default" data-toggle="modal" data-target="#abstract_{{$project['id']}}">Abstract</button>
 									@if($data['myPage'] === true)
 										<div class="pull-right" id="edit_{{ $project['id'] }}">
-											<span>edit</span>
+											<a href="{{ route('professor-edit-project', ['id'=>$project['id']]) }}"><i class="glyphicon glyphicon-edit"></i></a>
 										</div>
 									@endif
 								</td>
@@ -155,11 +205,7 @@
 				<span>No Projects</span>
 			</div>
 		@endif
-		@if($data['myPage'] === true)
-			<div class="col-xs-6 col-xs-offset-3 text-center">
-				<a href="{{ route('professor-add-project') }}" class="btn btn-primary">Add Project</a>
-			</div>
-		@endif
+		
 		<!--
 		<div class="col-xs-10 col-xs-offset-1">
 			<table class="table table-striped table-condensed">
@@ -213,12 +259,18 @@
 		</div>
 		-->
 	</div>
-<!--
+
 	<div class="row">
 		<div class="col-xs-12 text-center">
 			<h3>Publications</h3>
 		</div>
-		<div class="col-xs-10 col-xs-offset-1">
+		<div class="col-xs-12 text-center">
+			<a href="http://scholar.google.com/scholar?q={{$scholar_link}}"class="btn btn-primary">Google Scholar</a>
+			@if($data['myPage'] === true)
+			<button class="btn btn-default" class="btn btn-danger">Upload List</button>
+			@endif
+
+<!--
 			<table class="table table-striped table-condensed">
 				<thead>
 					<tr>
@@ -245,9 +297,10 @@
 					</tr>
 				</tbody>
 			</table>
+-->
 		</div>
 	</div>
--->
+
 </div>
 @stop
 

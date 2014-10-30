@@ -26,14 +26,21 @@
 				</div>
 
 				<div class="row">
-					<div class="col-xs-12 col-md-6">
+					<div class="col-xs-12 col-md-2">
+						<div class="form-group">
+							<label>Designation</label>
+							{{ Form::input('text', 'designation', null, array('class'=>'form-control', 'placeholder'=>'Designation', 'required'=>'required')) }}
+						</div>
+					</div>
+
+					<div class="col-xs-12 col-md-5">
 						<div class="form-group">
 							<label>First Name</label>
 							{{ Form::input('text', 'first_name', null, array('class'=>'form-control', 'placeholder'=>'First Name', 'required'=>'required')) }}
 						</div>
 					</div>
 
-					<div class="col-xs-12 col-md-6">
+					<div class="col-xs-12 col-md-5">
 						<div class="form-group">
 							<label>Last Name</label>
 							{{ Form::input('text', 'last_name', null, array('class'=>'form-control', 'placeholder'=>'Last Name', 'required'=>'required')) }}
@@ -48,7 +55,12 @@
 
 				<div class="form-group">
 					<label>Cabin</label>
-					{{ Form::input('cabin', 'cabin', null, array('class'=>'form-control', 'placeholder'=>'Cabin', 'required'=>'required')) }}
+					{{ Form::input('text', 'cabin', null, array('class'=>'form-control', 'placeholder'=>'Cabin', 'required'=>'required')) }}
+				</div>
+
+				<div class="form-group">
+					<label>Mobile</label>
+					{{ Form::input('text', 'mobile_no', null, array('class'=>'form-control', 'placeholder'=>'Mobile (No leading zero)', 'required'=>'required')) }}
 				</div>
 
 				<div class="text-center">

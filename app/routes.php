@@ -50,6 +50,8 @@ Route::group(array('before'=>'auth'), function() {
 		
 		Route::get('edit-project/{id}', array('as'=>'professor-edit-project', 'uses'=>'ProjectController@editProjectPage'));
 		Route::post('edit-project/{id}', array('as'=>'professor-edit-project-post', 'uses'=>'ProjectController@editProject'));
+		
+		Route::get('delete-project/{id}', array('as'=>'professor-delete-project', 'uses'=>'ProfessorController@deleteProject'));
 		// Route::get
 	});
 });
