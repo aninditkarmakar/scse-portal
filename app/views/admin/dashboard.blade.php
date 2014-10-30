@@ -13,7 +13,7 @@
 		</div>
 
 		<div class="col-xs-12 col-md-6">
-			<a href="#">
+			<a href="{{ route('add-student') }}">
 				<button class="btn admin-btn" id="btn_add_student">
 					<span>ADD STUDENT</span>
 				</button>

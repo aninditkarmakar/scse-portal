@@ -1,3 +1,12 @@
+<<<<<<< HEAD
+@extends('layouts.master')
+
+@section('body')
+	@foreach($errors->all() as $message)
+		<div class="alert alert-danger" role="alert">{{ $message }}</div>
+	@endforeach
+@endsection
+=======
 @extends ('layouts.master')
 
 @section('body')
@@ -53,3 +62,4 @@
 	{{ Form::close() }}
 </div>
 @stop
+>>>>>>> 9fef1772510920e00d009cf51380033b9e48d13a

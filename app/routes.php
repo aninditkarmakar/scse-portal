@@ -27,6 +27,11 @@ Route::group(array('before'=>'auth'), function() {
 		Route::get('add-professor', array('as'=>'add-professor', 'uses'=>'AdminController@addProfessorPage'));
 		Route::post('add-professor', array('as'=>'add-professor-post', 'uses'=>'ProfessorController@addProfessor'));
 		
+		Route::get('/', array('as'=>'admin-dashboard','uses'=>'AdminController@landingPage'));
+		Route::get('add-student', array('as'=>'add-student', 'uses'=>'AdminController@addStudentPage'));
+		Route::post('add-student', array('as'=>'add-student-post', 'uses'=>'StudentController@addStudent'));
+		
+
 
 		Route::get('delete-professor/{id}', function($id) {
 			User::where('username','=',$id)->first()->delete();

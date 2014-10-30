@@ -31,38 +31,7 @@ class StudentController extends \BaseController {
 	 */
 	public function store()
 	{
-		$input= input::all();
-		$input= json_decode($input, true);
-		/*$input = array(
-			'firstname' => Input::get('firstname'),
-			'lastname' => Input::get('lastname'),
-			'reg_no' => Input::get('reg_no'),
-			'email' => Input::get('email'),
-		);
-
-		$rules = array(
-			'firstname' => 'required',
-			'lastname' => 'required',
-			'reg_no' => 'required|unique:student',
-			'email' => 'required|email|unique:student',
-		);
-
-		$validator = Validator::make($input, $rules);
-
-		if($validator->fails()) {
-			return Redirect::route('student.create')->withErrors($validator);
-		}*/
-
-		$student = new Student();
-
-		$student->firstname = $input['firstname'];
-		$student->lastname = $input['lastname'];
-		$student->reg_no = strtoupper($input['reg_no']);
-		$student->email = $input['email'];
-
-		$student->save();
-
-		return Redirect::route('dashboard')->with('message', 'Student Added Successfully');
+		
 	}
 
 
@@ -114,4 +83,69 @@ class StudentController extends \BaseController {
 	}
 
 
+	public function addStudent()
+	{
+		$data['reg_no'] = Input::get('reg_no');
+		$data['firstName'] = Input::get('first_name');
+		$data['lastName'] = Input::get('last_name');
+		$data['email'] = Input::get('email');
+
+		// Validation rules
+		$rules = array(
+			'firstName' => 'required',
+			'lastName' => 'required',
+			'reg_no' => 'required|unique:students',
+			'email' => 'required|email|unique:students',
+			);
+
+		$messages = array(
+			'reg_no.unique' => 'The student registration number already exists!',
+			);
+
+		// Do validation
+		$validator = Validator::make($data, $rules);
+
+
+		if($validator->fails()) {
+			return Redirect::route('add-student')->withErrors($validator)->withInput();
+		}
+
+		$student = new Student();
+		$student->firstname = $data['firstName'];
+		$student->lastname = $data['lastName'];
+		$student->reg_no = strtoupper($data['reg_no']);
+		$student->email = $data['email'];
+
+		try {
+				DB::connection()->getPdo()->beginTransaction();
+
+				if(! $student->save()) {
+					$errors['message'] = 'There was an error saving the details. Please try again.';
+
+					return Redirect::route('add-student')->withErrors($errors)->withInput();
+				}
+				DB::connection()->getPdo()->commit();
+		} catch (\PDOException $e) {
+			 DB::connection()->getPdo()->rollBack();
+			 $errors['message'] = 'There was an error saving the details. Please try again.';
+			 return Redirect::route('add-student')->withErrors($errors)->withInput();
+		}
+		
+
+		// make the return data
+		$returnData['success'] = true;
+		$returnData['student'] = array(
+				'id' => $student->id,
+				'firstname' => ucfirst($student->firstname),
+				'lastname' => ucfirst($student->lastname),
+				'name' => ucfirst($student->firstname).' '.ucfirst($student->lastname),
+				'reg_no' => $student->reg_no,
+				'email' => $student->email,
+			);
+		
+
+		// return Response::make(json_encode($returnData), 200);
+
+		return Redirect::route('add-student')->with('success', $returnData['success']);;
+	}
 }
