@@ -14,12 +14,12 @@
 		</div>
 		<hr/>
 	@endif
-	{{ Form::open(array('route'=>'add-student-post', 'method'=>'post')) }}
+	{{ Form::open(array('route'=>'add-student-post', 'method'=>'post', 'data-parsley-validate'=>'data-parsley-validate', 'novalidate'=>'novalidate')) }}
 		<div class="row">
 			<div class="col-xs-12">
 				<div class="form-group">
 					<label>Registration Number</label>
-					{{ Form::input('text','reg_no', null, array('class'=>'form-control', 'placeholder'=>'Registration Number', 'required'=>'required')) }}
+					{{ Form::input('text','reg_no', null, array('class'=>'form-control', 'placeholder'=>'Registration Number', 'required'=>'required', 'data-parsley-pattern'=>'\d{2}[A-Z]{3}\d{4}', 'maxlength'=>'9')) }}
 					<!--<input type="number" id="fac_code" class="form-control" placeholder="Faculty Code"/>-->
 				</div>
 

@@ -1,3 +1,17 @@
+<?php
+	$buildings = array(
+			'CBMR' => 'CBMR',
+			'CDMM' => 'CDMM',
+			'GDN' => 'GDN',
+			'MB' => 'MB',
+			'SJT' => 'SJT',
+			'SJT-Annex' => 'SJT-Annex',
+			'SMV' => 'SMV',
+			'TT' => 'TT',
+			'TT-Annex'=>'TT-Annex',
+		);
+?>
+
 @extends ('layouts.master')
 
 @section('body')
@@ -16,12 +30,12 @@
 		</div>
 		<hr/>
 	@endif
-	{{ Form::open(array('route'=>'add-professor-post', 'method'=>'post')) }}
+	{{ Form::open(array('route'=>'add-professor-post', 'method'=>'post', 'data-parsley-validate'=>'data-parsley-validate', 'novalidate'=>'novalidate')) }}
 		<div class="row">
 			<div class="col-xs-12">
 				<div class="form-group">
 					<label>Faculty Code</label>
-					{{ Form::input('number','fac_code', null, array('class'=>'form-control', 'placeholder'=>'Faculty Code', 'required'=>'required')) }}
+					{{ Form::input('number','fac_code', null, array('class'=>'form-control', 'placeholder'=>'Faculty Code', 'required'=>'required', 'data-parsley-maxlength'=>'5')) }}
 					<!--<input type="number" id="fac_code" class="form-control" placeholder="Faculty Code"/>-->
 				</div>
 
@@ -55,12 +69,21 @@
 
 				<div class="form-group">
 					<label>Cabin</label>
-					{{ Form::input('text', 'cabin', null, array('class'=>'form-control', 'placeholder'=>'Cabin', 'required'=>'required')) }}
+					<div class="clearfix"></div>
+					<div class="col-sm-3">
+						{{ Form::select('building', $buildings, 'SJT', ['class'=>'form-control', 'required'=>'required']) }}
+					</div>
+					<div class="col-sm-3">
+						{{ Form::input('text', 'room', null, array('class'=>'form-control', 'placeholder'=>'Room No', 'required'=>'required', 'maxlength'=>'3')) }}
+					</div>
+					<div class="col-sm-6">
+						{{ Form::input('text', 'cabin', null, array('class'=>'form-control', 'placeholder'=>'Cabin No.', 'required'=>'required')) }}
+					</div>					
 				</div>
 
 				<div class="form-group">
 					<label>Mobile</label>
-					{{ Form::input('text', 'mobile_no', null, array('class'=>'form-control', 'placeholder'=>'Mobile (No leading zero)', 'required'=>'required')) }}
+					{{ Form::input('text', 'mobile_no', null, array('class'=>'form-control', 'placeholder'=>'Mobile (No leading zero)', 'required'=>'required', 'maxlength'=>'10', 'data-parsley-type'=>'integer')) }}
 				</div>
 
 				<div class="text-center">

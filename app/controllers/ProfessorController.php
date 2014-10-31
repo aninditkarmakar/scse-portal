@@ -186,6 +186,8 @@ class ProfessorController extends \BaseController {
 		$data['firstName'] = Input::get('first_name');
 		$data['lastName'] = Input::get('last_name');
 		$data['email'] = Input::get('email');
+		$data['building'] = Input::get('building');
+		$data['room'] = Input::get('room');
 		$data['cabin'] = Input::get('cabin');
 		$data['designation'] = Input::get('designation');
 		$data['mobile_no'] = Input::get('mobile_no');
@@ -198,6 +200,8 @@ class ProfessorController extends \BaseController {
 			'cabin' => 'required|alpha_dash',
 			'designation' => 'required',
 			'mobile_no' => 'required|numeric|digits:10',
+			'building' => 'required',
+			'room' => 'required'
 			);
 
 		$messages = array(
@@ -228,7 +232,7 @@ class ProfessorController extends \BaseController {
 		$faculty->firstname = ucfirst($data['firstName']);
 		$faculty->lastname = ucfirst($data['lastName']);
 		$faculty->faculty_code = $data['facCode'];
-		$faculty->cabin = strtoupper($data['cabin']);
+		$faculty->cabin = strtoupper($data['building'].' '.$data['room'].'-'.$data['cabin']);
 		$faculty->designation = $data['designation'];
 		$faculty->mobile_no = $data['mobile_no'];
 

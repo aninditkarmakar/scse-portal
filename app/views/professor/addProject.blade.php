@@ -26,7 +26,7 @@
 				@foreach($errors->all() as $message)
 					<div class="alert alert-danger" role="alert">{{ $message }}</div>
 				@endforeach
-				{{ Form::open(array('route'=>'professor-add-project-post', 'files'=>true, 'method'=>'post', 'role'=>'form', 'class'=>'form-horizontal')) }}
+				{{ Form::open(array('route'=>'professor-add-project-post', 'files'=>true, 'method'=>'post', 'role'=>'form', 'class'=>'form-horizontal', 'data-parsley-validate'=>'data-parsley-validate', 'novalidate'=>'novalidate')) }}
 					
 					<div class="form-group">
 						<label for="title" class="col-sm-2 control-label">Title</label>
