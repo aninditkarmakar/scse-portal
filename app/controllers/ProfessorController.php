@@ -159,6 +159,7 @@ class ProfessorController extends \BaseController {
 			// }
 		}
 
+		$data['id'] = $faculty->id;
 		$data['firstName'] = $faculty->firstname;
 		$data['lastName'] = $faculty->lastname;
 		$data['name'] = $data['firstName'].' '.$data['lastName'];
@@ -172,7 +173,8 @@ class ProfessorController extends \BaseController {
 		$data['about_me'] = $faculty->about_me;
 		$data['mobile_no'] = $faculty->mobile_no;
 
-		$projects = Project::with('projectAbstract')->where('faculty_id','=',$faculty->id)->get();
+		$projects = Project::with('projectAbstract', 'students', 'projectType')->where('faculty_id','=',$faculty->id)->get();
+
 
 		$data['projects'] = $projects->toArray();
 

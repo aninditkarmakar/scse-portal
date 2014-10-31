@@ -51,6 +51,8 @@ Route::group(array('before'=>'auth'), function() {
 		Route::get('edit-project/{id}', array('as'=>'professor-edit-project', 'uses'=>'ProjectController@editProjectPage'));
 		Route::post('edit-project/{id}', array('as'=>'professor-edit-project-post', 'uses'=>'ProjectController@editProject'));
 		
+		Route::post('upload/publications-list', array('as'=>'professor-upload-publications', 'uses'=>'FileController@professorPublicationUpload'));
+
 		Route::get('delete-project/{id}', array('as'=>'professor-delete-project', 'uses'=>'ProfessorController@deleteProject'));
 		// Route::get
 	});
@@ -63,8 +65,8 @@ Route::get('logout', array('as'=>'logout', 'uses'=>'LoginController@doLogout'));
 
 Route::get('search', array('as'=>'search', 'uses'=>'SearchController@searchPage'));
 
-Route::get('user_files/faculty/projects/{$filename}', array('as'=>'project-pdf-download', 'uses'=>'FileController@getProjectPDF'));
-
+Route::get('user_files/faculty/projects/{filename}', array('as'=>'project-pdf-download', 'uses'=>'FileController@getProjectPDF'));
+Route::get('user_files/faculty/publications/{filename}', array('as' => 'publications-pdf-download', 'uses'=>'FileController@getPublicationsList'));
 // Route::get('user_files/faculty/projects/{$id}', function($id) {
 // 	dd($id);
 // });

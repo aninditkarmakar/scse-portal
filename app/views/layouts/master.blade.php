@@ -33,7 +33,7 @@
 		@show
 
 		@section('footer')
-		<p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
+		<!--<p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>-->
 		@show
 	</div>
 

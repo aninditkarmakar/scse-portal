@@ -1,8 +1,14 @@
 <?php 
 	$data = $details;
 	$scholar_link = urlencode($data['name'].' VIT University');
+	$publication_file = $data['id'].'_publications.pdf';
 ?>
 @extends('layouts.master')
+
+@section('header-scripts')
+	<script type="text/javascript" src="{{asset('js/bootstrap-filestyle.js')}}"> </script>
+@append
+
 @section('body')
 <div class="container">
 
@@ -186,7 +192,7 @@
 					<tbody>
 						@foreach($data['projects'] as $project)
 							<tr id="project_{{ $project['id'] }}">
-								<td><a href="{{ URL::route('project-pdf-download', array('filename'=>$project['filename'])) }}">{{ $project['title'] }}</a></td>
+								<td><a href="#" data-toggle="modal" data-target="#proj_detail_{{$project['id']}}">{{ $project['title'] }}</a></td>
 								<td class="text-center">
 									<button class="btn btn-default" data-toggle="modal" data-target="#abstract_{{$project['id']}}">Abstract</button>
 									@if($data['myPage'] === true)
@@ -265,9 +271,10 @@
 			<h3>Publications</h3>
 		</div>
 		<div class="col-xs-12 text-center">
-			<a href="http://scholar.google.com/scholar?q={{$scholar_link}}"class="btn btn-primary">Google Scholar</a>
+			<a href="http://scholar.google.com/scholar?q={{$scholar_link}}" class="btn btn-primary" target="_blank">Google Scholar</a>
+			<a href="{{ route('publications-pdf-download', $publication_file) }}" class="btn btn-default" target="_blank">Download</a>
 			@if($data['myPage'] === true)
-			<button class="btn btn-default" class="btn btn-danger">Upload List</button>
+			<button class="btn btn-default" class="btn btn-danger" data-toggle="modal" data-target="#publication_upload">Upload List</button>
 			@endif
 
 <!--
@@ -322,7 +329,99 @@
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
+
+	<div class="modal fade" id="proj_detail_{{$project['id']}}" aria-labelledby="proj_detail_{{$project['id']}}" aria-hidden="true">
+		<div class="modal-dialog project_modal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">{{$project['title']}}</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-7">
+							<div class="col-sm-3"><label class="control-label">Type:</label></div>
+							<div class="col-sm-9"><span>{{ $project['project_type']['type'] }}</span></div>
+							<div class="clearfix"></div>
+							
+							<div class="col-sm-3"><label class="control-lavel">Start Date:</label></div>
+							<div class="col-sm-9">{{ $project['start_date'] }}</div>
+							<div class="clearfix"></div>
+								
+							@if($project['end_date'] !== '0000-00-00')
+							<div class="col-sm-3"><label class="control-lavel">End Date:</label></div>
+							<div class="col-sm-9">{{ $project['end_date'] }}</div>
+							<div class="clearfix"></div>
+							@endif
+
+							<div class="col-sm-3"><label class="control-lavel">PDF File:</label></div>
+							<div class="col-sm-9">
+								<a href="{{ route('project-pdf-download', ['filename'=>$project['filename']]) }}" target="_blank">Download</a>
+							</div>
+							<div class="clearfix"></div>
+
+						</div>
+						<div class="col-sm-5">
+							
+							<table class="table-striped">
+								<th>Students</th>
+								@if(count($project['students']) === 0)
+									<tr><td>-</td></tr>
+								@endif
+								@foreach($project['students'] as $student)
+									<tr>
+										<td>{{$student['firstname'].' '.$student['lastname'].' ('.$student['reg_no'].')'}}</td>
+									</tr>
+								@endforeach
+							</table>
+
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer"></div>
+			</div>
+		</div>
+	</div>
 	@endforeach
+
+	@if($data['myPage'] === true) 
+
+	<div class="modal fade" id="publication_upload" aria-labelledby="publication_upload" aria-hidden="true">
+
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">Upload a PDF File</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							{{ Form::open(['route'=>'professor-upload-publications', 'method'=>'POST', 'files'=>true, 'role'=>'form', 'class'=>'form-horizontal']) }}
+
+							<div class="form-group">
+								<label for="publications" class="col-sm-2 control-label">PDF File</label>
+								<div class="col-sm-10">
+									{{ Form::file('publications', '', array('class'=>'filestyle', 'data-icon'=>'false', 'required'=>'required')) }}
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-sm-12 text-center">
+									{{ Form::submit('Add it', array('class'=>'btn btn-lg btn-primary')) }}
+									<button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">CANCEL</button>
+								</div>
+							</div>
+
+							{{ Form::close() }}
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer"></div>
+			</div>
+		</div>
+	</div>
+	@endif
 @stop
 
 @section('scripts')

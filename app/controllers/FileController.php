@@ -85,8 +85,45 @@ class FileController extends \BaseController {
 
 
 	public function getProjectPDF($filename) {
-		dd("here");
 		$filePath = base_path().'/user_files/faculty/projects/'.$filename;
-		return Response::download($file, '$filename.pdf', array('Content-Type: application/pdf'));
+		return Response::download($filePath, $filename, array('Content-Type: application/pdf'));
 	} 
+
+	public function getPublicationsList($filename) {
+		$filePath = base_path().'/user_files/faculty/publications/'.$filename;
+		return Response::download($filePath, $filename, array('Content-Type: application/pdf'));
+	}
+
+	public function professorPublicationUpload() {
+		$maxFileSize = 5; //MB
+		$basePath = base_path();
+		
+		if(!Input::hasFile('publications')) {
+			return Redirect::route('professor-profile')->withErrors(['message' => 'Please upload a file!']);
+		}
+
+		$file = Input::file('publications');
+
+		if($file->getSize() > $maxFileSize*1024*1024) {
+			return Redirect::route('professor-profile')->withErrors(['message' => 'Max Filesize: '.$maxFileSize.'MB!']);
+		}
+
+		if($file->getClientOriginalExtension() !== 'pdf') {
+			return Redirect::route('professor-profile')->withErrors(['message'=>'File should be in PDF format']);
+		}
+
+		$faculty = Auth::user()->faculty;
+
+		$info['filename'] = $faculty->id.'_publications.pdf';
+
+		$filePath = $basePath.'/user_files/faculty/publications/';
+
+		try {
+			$file->move($filePath, $info['filename']);
+		} catch(\Exception $e) {
+			return Redirect::route('professor-add-project')->withErrors(['message'=>'There was an error. Please try again']);
+		}
+
+		return Redirect::route('professor-profile');
+	}
 }

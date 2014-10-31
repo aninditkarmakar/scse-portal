@@ -247,14 +247,23 @@ class SearchController extends \BaseController {
 
 		$searchTerm = Input::get('q');
 
-		$s = $searchTerm;
+		$s = $searchTerm.'%';
 
-		$faculties = Faculty::where('faculty_code', '=', $s)
-			->select('id', DB::raw("concat(`firstname`, ' ', `lastname`) as name"))
+		$faculties = Faculty::where('faculty_code', 'LIKE', $s)
+			->select('id', 'firstname', 'lastname', 'faculty_code')
 			->take(20)
 			->get();
 
-		$returnData = array('data' => $faculties);
+		$faculties = $faculties->toArray();
+		$results = array();
+
+		foreach ($faculties as $faculty) {
+			$item['name'] = $faculty['firstname'].' '.$faculty['lastname'].' ('.$faculty['faculty_code'].')';
+			$item['id'] = $faculty['id'];
+			array_push($results, $item); 
+		}
+
+		$returnData = array('data' => $results);
 		return json_encode($returnData);
 	}
 

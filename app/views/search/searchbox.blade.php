@@ -8,7 +8,7 @@
 
 @section('header-scripts')
 	<script src="{{asset('js/typeahead.min.js')}}"></script>
-@stop
+@append
 
 @section('searchbox-scripts')
 <script>
