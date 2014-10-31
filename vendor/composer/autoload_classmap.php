@@ -7,7 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'AddColumnToFacultiesHasSubjectsTable' => $baseDir . '/app/database/migrations/2014_09_27_124216_add_column_to_faculties_has_subjects_table.php',
-    'AddColumnToFacultiesTable' => $baseDir . '/app/database/migrations/2014_10_06_132628_add_column_to_faculties_table.php',
+    'AddColumnToFacultiesTable' => $baseDir . '/app/database/migrations/2014_10_28_160000_add_column_to_faculties_Table.php',
     'AddColumnToProjectsTable' => $baseDir . '/app/database/migrations/2014_10_06_125030_add_column_to_projects_table.php',
     'AddColumnToUsersTable' => $baseDir . '/app/database/migrations/2014_09_22_165809_add_column_to_users_table.php',
     'AdminController' => $baseDir . '/app/controllers/AdminController.php',
@@ -1196,6 +1196,7 @@ return array(
     'Semester' => $baseDir . '/app/models/Semester.php',
     'SemesterTableSeeder' => $baseDir . '/app/database/seeds/SemesterTableSeeder.php',
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php',
+    'Specialization' => $baseDir . '/app/models/Specialization.php',
     'Stack\\Builder' => $vendorDir . '/stack/builder/src/Stack/Builder.php',
     'Stack\\StackedHttpKernel' => $vendorDir . '/stack/builder/src/Stack/StackedHttpKernel.php',
     'Student' => $baseDir . '/app/models/Student.php',

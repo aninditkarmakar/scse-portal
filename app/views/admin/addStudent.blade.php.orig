@@ -1,3 +1,12 @@
+<<<<<<< HEAD
+@extends('layouts.master')
+
+@section('body')
+	@foreach($errors->all() as $message)
+		<div class="alert alert-danger" role="alert">{{ $message }}</div>
+	@endforeach
+@endsection
+=======
 @extends ('layouts.master')
 
 @section('body')
@@ -14,12 +23,12 @@
 		</div>
 		<hr/>
 	@endif
-	{{ Form::open(array('route'=>'add-student-post', 'method'=>'post', 'data-parsley-validate'=>'data-parsley-validate', 'novalidate'=>'novalidate')) }}
+	{{ Form::open(array('route'=>'add-student-post', 'method'=>'post')) }}
 		<div class="row">
 			<div class="col-xs-12">
 				<div class="form-group">
 					<label>Registration Number</label>
-					{{ Form::input('text','reg_no', null, array('class'=>'form-control', 'placeholder'=>'Registration Number', 'required'=>'required', 'data-parsley-pattern'=>'\d{2}[A-Z]{3}\d{4}', 'maxlength'=>'9')) }}
+					{{ Form::input('text','reg_no', null, array('class'=>'form-control', 'placeholder'=>'Registration Number', 'required'=>'required')) }}
 					<!--<input type="number" id="fac_code" class="form-control" placeholder="Faculty Code"/>-->
 				</div>
 
@@ -53,3 +62,4 @@
 	{{ Form::close() }}
 </div>
 @stop
+>>>>>>> 9fef1772510920e00d009cf51380033b9e48d13a

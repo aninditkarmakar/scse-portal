@@ -126,32 +126,57 @@ class ProfessorController extends \BaseController {
 		
 	}
 
-	public function profilePage($facCode = null) {
-		$user = Auth::user();
-		$faculty = $user->faculty;
+	public function profilePage($id = null) {
+		$faculty = null;
+		$user = null;
 
 		$data = array(
-			'myPage' => true
+			'myPage' => false
 		);
 
-		if(! $user->isProfessor()) {
-			return 'Not Authorized as professor';
+		if($id !== null) {
+			$faculty = Faculty::find($id);
+			$user = $faculty->user;
+
+			if(Auth::check()) {
+				if(Auth::user()->faculty->id === intval($id)) {
+					$data['myPage'] = true;
+				}
+			}
+		} else {
+			$user = Auth::user();
+			$faculty = $user->faculty;
+
+			if(! $user->isProfessor()) {
+				return 'Not Authorized as professor';
+			}
+
+			$data['myPage'] = true;
+			// if(($faculty->id === )!is_null($id) && $faculty->id === intval($id)) {
+			// 	$data['myPage'] = true;
+			// } else {
+			// 	$data['myPage'] = false;
+			// }
 		}
 
-		if(! is_null($facCode) && $faculty->id === intval($facCode)) {
-			$data['myPage'] = false;
-		} else if(! is_null($facCode)) {
-			$faculty = Faculty::where('faculty_code', '=', intval($facCode))->first();
-		}
-
+		$data['id'] = $faculty->id;
 		$data['firstName'] = $faculty->firstname;
 		$data['lastName'] = $faculty->lastname;
 		$data['name'] = $data['firstName'].' '.$data['lastName'];
+		$data['email'] = $user->email;
 
 		$freeSlots = $faculty->getFreeSlots();
 		$data['freeSlots'] = $freeSlots;
-
 		$data['specializations'] = $faculty->getSpecializations();
+
+		$data['designation'] = $faculty->designation;
+		$data['about_me'] = $faculty->about_me;
+		$data['mobile_no'] = $faculty->mobile_no;
+
+		$projects = Project::with('projectAbstract', 'students', 'projectType')->where('faculty_id','=',$faculty->id)->get();
+
+
+		$data['projects'] = $projects->toArray();
 
 		return View::make('professor.profile')->with('details', $data);
 	}
@@ -161,7 +186,11 @@ class ProfessorController extends \BaseController {
 		$data['firstName'] = Input::get('first_name');
 		$data['lastName'] = Input::get('last_name');
 		$data['email'] = Input::get('email');
+		$data['building'] = Input::get('building');
+		$data['room'] = Input::get('room');
 		$data['cabin'] = Input::get('cabin');
+		$data['designation'] = Input::get('designation');
+		$data['mobile_no'] = Input::get('mobile_no');
 
 		$rules = array(
 			'facCode' => 'required|digits:5|unique:faculties,faculty_code',
@@ -169,6 +198,10 @@ class ProfessorController extends \BaseController {
 			'lastName' => 'required|alpha',
 			'email' => 'required|unique:users,email',
 			'cabin' => 'required|alpha_dash',
+			'designation' => 'required',
+			'mobile_no' => 'required|numeric|digits:10',
+			'building' => 'required',
+			'room' => 'required'
 			);
 
 		$messages = array(
@@ -199,7 +232,9 @@ class ProfessorController extends \BaseController {
 		$faculty->firstname = ucfirst($data['firstName']);
 		$faculty->lastname = ucfirst($data['lastName']);
 		$faculty->faculty_code = $data['facCode'];
-		$faculty->cabin = strtoupper($data['cabin']);
+		$faculty->cabin = strtoupper($data['building'].' '.$data['room'].'-'.$data['cabin']);
+		$faculty->designation = $data['designation'];
+		$faculty->mobile_no = $data['mobile_no'];
 
 		try {
 				DB::connection()->getPdo()->beginTransaction();
@@ -263,6 +298,9 @@ class ProfessorController extends \BaseController {
 		$data['firstName'] = $faculty->firstname;
 		$data['lastName'] = $faculty->lastname;
 		$data['name'] = $data['firstName'].' '.$data['lastName'];
+		$data['cabin'] = $faculty->cabin;
+		$data['mobile_no'] = $faculty->mobile_no;
+		$data['about_me'] = $faculty->about_me;
 
 		$freeSlots = $faculty->getFreeSlots();
 		$data['freeSlots'] = $freeSlots;
@@ -289,6 +327,21 @@ class ProfessorController extends \BaseController {
 		if(!isset($input['freeSlots']) || !isset($input['specializations'])) {
 			return Response::make(json_encode($returnData), 400)->header('Content-Type', 'application/json');
 		}
+
+		if(!isset($input['cabin'])) {
+			return Response::make(json_encode($returnData), 400)->header('Content-Type', 'application/json');
+		} else {
+			$faculty->cabin = $input['cabin'];
+		}
+
+		if(isset($input['about_me'])) {
+			$faculty->about_me = $input['about_me'];
+		}
+
+		if(isset($input['mobile_no'])) {
+			$faculty->mobile_no = $input['mobile_no'];
+		}
+
 		DB::connection()->getPdo()->beginTransaction();
 
 		try{
@@ -313,6 +366,7 @@ class ProfessorController extends \BaseController {
 
 			$faculty->save();
 		} catch(\PDOException $e) {
+			DB::connection()->getPdo()->rollback();
 			$returnData['message'] = $e->getMessage();
 			return Response::make(json_encode($returnData), 400)->header('Content-Type', 'application/json');
 		} 
@@ -321,5 +375,123 @@ class ProfessorController extends \BaseController {
 
 		$returnData['success'] = true;
 		return Response::make(json_encode($returnData), 200)->header('Content-Type', 'application/json');
+	}
+
+	public function showAddProjectPage() {
+		$projectTypes = ProjectType::all()->toArray();
+
+		return View::make('professor.addProject', array('project_types'=>$projectTypes));
+	}
+
+	public function addProject() {
+		$basePath = base_path();
+		$faculty = Auth::user()->faculty;
+		$maxFileSize = 10; //MB
+
+		$info['title'] = Input::get('title');
+		$info['abstract'] = Input::get('abstract');
+		$info['student_ids'] = explode(', ',Input::get('student_ids'));
+		
+		array_pop($info['student_ids']);
+
+		$info['type'] = Input::get('type');
+		$info['start_date'] = Input::get('start_date');
+		$info['end_date'] = Input::get('end_date');
+
+		$rules = array(
+				'title'=>'required',
+				'abstract'=>'required',
+				'student_ids' => 'required',
+				'type'=>'required',
+				'start_date' => 'required',
+				'end_date' => 'required',
+			);
+		$validator = Validator::make($info, $rules);
+
+		if($validator->fails()) {
+			return Redirect::route('professor-add-project')->withErrors($validator)->withInput();
+		}
+
+		if(!Input::hasFile('file')) {
+			return Redirect::route('professor-add-project')->withErrors(['message'=>'No file selected'])->withInput();
+		}
+
+		$file = Input::file('file');
+
+		if($file->getSize() > $maxFileSize*1024*1024) {
+			return Redirect::route('professor-add-project')->withErrors(['message'=>'Filesize should be less than '.$maxFileSize.'MB'])->withInput();
+		}
+
+		if($file->getClientOriginalExtension() !== 'pdf') {
+			return Redirect::route('professor-add-project')->withErrors(['message'=>'File should be in PDF format'])->withInput();
+		}
+
+		
+		$info['file_name'] = $faculty->id.'_'.str_replace(' ', '_', $info['title']).'.pdf';
+
+		$filePath = $basePath.'/user_files/faculty/projects/';
+
+		$file->move($filePath, $info['file_name']);
+
+		DB::beginTransaction();
+
+		try {
+			$project = new Project();
+			$project->title = $info['title'];
+			$project->type_id = $info['type'];
+			$project->faculty_id = $faculty->id;
+			$project->start_date = $info['start_date'];
+			$project->end_date = $info['end_date'];
+			$project->filename = $info['file_name'];
+
+			$project->save();
+
+			$pivotInfo = array();
+			foreach($info['student_ids'] as $id) {
+				array_push($pivotInfo, array('student_id'=>intval($id), 'project_id'=>$project->id));
+			}
+
+			$abstract = new ProjectAbstract();
+			$abstract->abstract = $info['abstract'];
+			$abstract->project_id = $project->id;
+
+			$abstract->save();		
+
+			if((count($pivotInfo)>0)) {				
+				DB::table('students_has_projects')->insert($pivotInfo);
+			}
+		} catch(\Exception $e) {
+			DB::rollback();
+			dd($e->getMessage());
+		}
+
+		DB::commit();
+
+		return Redirect::route('professor-profile');
+	}
+
+	public function deleteProject($id) {
+		$project = Project::find($id);
+		$faculty = Auth::user()->faculty;
+
+		if(intval($project->faculty_id) !== $faculty->id) {
+			return Redirect::route('professor-profile')->withErrors(['message'=>'That is not your project!']);
+		}
+
+		DB::beginTransaction();
+
+		try {
+			$project->project_abstract->delete();
+			$project->students()->delete();
+			$project->tags()->delete();
+			$project->delete();
+		} catch (\PDOException $e) {
+			DB::rollback();
+			return Redirect::route('professor-edit-project', array('id'=>$project->id))->withErrors(['message'=>'There was an error deleting the project.']);
+		}
+
+		DB::commit();
+		
+		return Redirect::route('professor-profile');
 	}
 }

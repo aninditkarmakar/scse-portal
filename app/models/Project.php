@@ -10,7 +10,7 @@ class Project extends \Eloquent {
 	public $timestamps = false;
 
 	public function projectAbstract() {
-		return $this->hasOne('ProjectAbstract', 'project_id');
+		return $this->hasOne('ProjectAbstract', 'project_id', 'id');
 	}
 
 	public function projectType() {

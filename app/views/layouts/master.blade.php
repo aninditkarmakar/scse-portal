@@ -13,6 +13,7 @@
 	<script src="{{asset('js/jquery.min.js')}}"></script>
 	<script src="{{asset('js/bootstrap.min.js')}}"></script>
 	<script src="{{asset('js/modernizr.js')}}"></script>
+	<script src="{{asset('js/parsley.min.js')}}"></script>
 	@section('header-scripts')
 
 	@show
@@ -33,9 +34,13 @@
 		@show
 
 		@section('footer')
-		<p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
+		<!--<p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>-->
 		@show
 	</div>
+
+	@section('modals')
+
+	@show
 
 	@section('scripts')
 
