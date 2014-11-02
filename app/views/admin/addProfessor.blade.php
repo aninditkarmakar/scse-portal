@@ -35,8 +35,7 @@
 			<div class="col-xs-12">
 				<div class="form-group">
 					<label>Faculty Code</label>
-					{{ Form::input('number','fac_code', null, array('class'=>'form-control', 'placeholder'=>'Faculty Code', 'required'=>'required', 'data-parsley-maxlength'=>'5')) }}
-					<!--<input type="number" id="fac_code" class="form-control" placeholder="Faculty Code"/>-->
+					{{ Form::input('number','fac_code', null, array('class'=>'form-control', 'placeholder'=>'Faculty Code', 'required'=>'required', 'data-parsley-maxlength'=>'5', 'id'=>'fac_code')) }}
 				</div>
 
 				<div class="row">
@@ -74,7 +73,7 @@
 						{{ Form::select('building', $buildings, 'SJT', ['class'=>'form-control', 'required'=>'required']) }}
 					</div>
 					<div class="col-sm-3">
-						{{ Form::input('text', 'room', null, array('class'=>'form-control', 'placeholder'=>'Room No', 'required'=>'required', 'maxlength'=>'3')) }}
+						{{ Form::input('text', 'room', null, array('class'=>'form-control', 'placeholder'=>'Room No', 'required'=>'required', 'maxlength'=>'3', 'id'=>'room')) }}
 					</div>
 					<div class="col-sm-6">
 						{{ Form::input('text', 'cabin', null, array('class'=>'form-control', 'placeholder'=>'Cabin No.', 'required'=>'required')) }}
@@ -83,7 +82,7 @@
 
 				<div class="form-group">
 					<label>Mobile</label>
-					{{ Form::input('text', 'mobile_no', null, array('class'=>'form-control', 'placeholder'=>'Mobile (No leading zero)', 'required'=>'required', 'maxlength'=>'10', 'data-parsley-type'=>'integer')) }}
+					{{ Form::input('text', 'mobile_no', null, array('class'=>'form-control', 'placeholder'=>'Mobile (No leading zero)', 'required'=>'required', 'maxlength'=>'10', 'data-parsley-type'=>'integer', 'id'=>'mobile_no')) }}
 				</div>
 
 				<div class="text-center">
@@ -95,3 +94,37 @@
 	{{ Form::close() }}
 </div>
 @stop
+
+@section('scripts')
+	<script>
+		$('#fac_code').keypress(function(ev) {
+			if(!(event.keyCode >= 48 && event.keyCode <= 57)) {
+				ev.preventDefault();
+			}
+			if($('#fac_code').val().length >= 5) {
+				ev.preventDefault();
+			}
+		});
+
+		$('#room').keypress(function(ev) {
+			if(!(event.keyCode >= 48 && event.keyCode <= 57)) {
+				ev.preventDefault();
+			}
+			if($('#room').val().length >= 3) {
+				ev.preventDefault();
+			}
+		});
+
+		$('#mobile_no').keypress(function(ev) {
+			if(!(event.keyCode >= 48 && event.keyCode <= 57)) {
+				ev.preventDefault();
+			}
+			if($('#mobile_no').val().length === 0 && event.keyCode == 48) {
+				ev.preventDefault();
+			} 
+			if($('#mobile_no').val().length >= 10) {
+				ev.preventDefault();
+			}
+		});
+	</script>
+@append

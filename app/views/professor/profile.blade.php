@@ -84,8 +84,18 @@
 						<span>{{ $data['email'] }}</span>
 					</div>
 				</div>
-				
 				<br/>
+
+				<div class="row">
+					<div class="col-xs-4">
+						<span><strong>Cabin:</strong></span>
+					</div>
+					<div class="col-xs-8 text-center">
+						<span>{{ $data['cabin'] }}</span>
+					</div>
+				</div>
+				<br/>
+
 				<div class="row">
 					<div class="col-xs-4">
 						<span><strong>Free slots:</strong></span>

@@ -113,7 +113,7 @@ class ProjectController extends \BaseController {
 
 		$info['id'] = $project->id;
 		$info['title'] = $project->title;
-		$info['abstract'] = $project->project_abstract->abstract;
+		$info['abstract'] = nl2br($project->project_abstract->abstract);
 		$info['type'] = $project->type_id;
 		$info['start_date'] = $project->start_date;
 		$info['end_date'] = $project->end_date;
@@ -140,6 +140,7 @@ class ProjectController extends \BaseController {
 		$info['type'] = Input::get('type');
 		$info['start_date'] = Input::get('start_date');
 		$info['end_date'] = Input::get('end_date');
+		$info['file_uploaded'] = intval(Input::get('file_uploaded'));
 
 		$rules = array(
 				'title'=>'required',
@@ -147,34 +148,52 @@ class ProjectController extends \BaseController {
 				'student_ids' => 'required',
 				'type'=>'required',
 				'start_date' => 'required',
-				'end_date' => 'required',
+				//'end_date' => 'required',
 			);
 		$validator = Validator::make($info, $rules);
+		$file = null;
 
 		if($validator->fails()) {
 			return Redirect::route('professor-edit-project', ['id'=>$id])->withErrors($validator)->withInput();
 		}
 
-		if(!Input::hasFile('file')) {
-			return Redirect::route('professor-edit-project', ['id'=>$id])->withErrors(['message'=>'No file selected'])->withInput();
+		if($info['file_uploaded'] === 0) {
+			if(!Input::hasFile('file')) {
+				return Redirect::route('professor-edit-project', ['id'=>$id])->withErrors(['message'=>'Please upload a PDF file!'])->withInput();
+			} else {
+				$file = Input::file('file');
+				if($file->getSize() > $maxFileSize*1024*1024) {
+					return Redirect::route('professor-edit-project', ['id'=>$id])->withErrors(['message'=>'Filesize should be less than '.$maxFileSize.'MB'])->withInput();
+				}
+
+				if($file->getClientOriginalExtension() !== 'pdf') {
+					return Redirect::route('professor-edit-project', ['id'=>$id])->withErrors(['message'=>'File should be in PDF format'])->withInput();
+				}
+
+				$info['file_name'] = $faculty->id.'_'.str_replace(' ', '_', $info['title']).'.pdf';
+
+				$filePath = $basePath.'/user_files/faculty/projects/';
+
+				$file->move($filePath, $info['file_name']);
+			}
+		} else {
+			if(Input::hasFile('file')) {
+				$file = Input::file('file');
+				if($file->getSize() > $maxFileSize*1024*1024) {
+					return Redirect::route('professor-edit-project', ['id'=>$id])->withErrors(['message'=>'Filesize should be less than '.$maxFileSize.'MB'])->withInput();
+				}
+
+				if($file->getClientOriginalExtension() !== 'pdf') {
+					return Redirect::route('professor-edit-project', ['id'=>$id])->withErrors(['message'=>'File should be in PDF format'])->withInput();
+				}
+
+				$info['file_name'] = $faculty->id.'_'.str_replace(' ', '_', $info['title']).'.pdf';
+
+				$filePath = $basePath.'/user_files/faculty/projects/';
+
+				$file->move($filePath, $info['file_name']);
+			}			
 		}
-
-		$file = Input::file('file');
-
-		if($file->getSize() > $maxFileSize*1024*1024) {
-			return Redirect::route('professor-edit-project', ['id'=>$id])->withErrors(['message'=>'Filesize should be less than '.$maxFileSize.'MB'])->withInput();
-		}
-
-		if($file->getClientOriginalExtension() !== 'pdf') {
-			return Redirect::route('professor-edit-project', ['id'=>$id])->withErrors(['message'=>'File should be in PDF format'])->withInput();
-		}
-
-		
-		$info['file_name'] = $faculty->id.'_'.str_replace(' ', '_', $info['title']).'.pdf';
-
-		$filePath = $basePath.'/user_files/faculty/projects/';
-
-		$file->move($filePath, $info['file_name']);
 
 		DB::beginTransaction();
 
@@ -185,7 +204,9 @@ class ProjectController extends \BaseController {
 			$project->faculty_id = $faculty->id;
 			$project->start_date = $info['start_date'];
 			$project->end_date = $info['end_date'];
-			$project->filename = $info['file_name'];
+			if(isset($info['file_name'])) {
+				$project->filename = $info['file_name'];
+			}			
 
 			$project->save();
 

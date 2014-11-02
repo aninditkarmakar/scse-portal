@@ -39,6 +39,18 @@
 		'6pm',
 		'7pm'
 	];
+
+	$buildings = array(
+			['label'=>'CBMR','value'=>'CBMR'],
+			['label'=>'CDMM','value'=>'CDMM'],
+			['label'=>'GDN','value'=>'GDN'],
+			['label'=>'MB','value'=>'MB'],
+			['label'=>'SJT','value'=>'SJT'],
+			['label'=>'SJT Annex','value'=>'SJT Annex'],
+			['label'=>'SMV','value'=>'SMV'],
+			['label'=>'TT','value'=>'TT'],
+			['label'=>'TT Annex','value'=>'TT Annex'],
+		);
 ?>
 @extends('layouts.master')
 
@@ -48,9 +60,10 @@
 		var details = {{ json_encode($details) }};
 		var weekdays = {{ json_encode($weekdaysSingle) }};
 		var times = {{ json_encode($times) }};
+		var buildings = {{ json_encode($buildings) }};
 		var model = {};
 	</script>
-@stop
+@append
 @section('body')
 	<div id="overlay"></div>
 	<div class="container" id="editForm">
@@ -58,88 +71,40 @@
 			<div class="col-xs-12 text-center">
 				<h3 style="margin-top: 5px">Edit Details</h3>
 			</div>
-<!--
-			<form role="form" class="form-horizontal">
+			<form action="#" role="form" class="form-horizontal" id="form_edit" novalidate data-parsley-validate>
 				<div class="form-group">
-					<label for="firstname" class="col-sm-2 control-label">FirstName</label>
+					<label class="col-sm-2 control-label">First Name</label>
 					<div class="col-sm-10">
-						{{ Form::input('text', 'firstname', $details['firstName'], ['class'=>'form-control', 'id'=>'firstname', 'placeholder'=>'First Name']) }}
+						<input type="text" class="form-control" rv-value="details.firstName" placeholder="First Name" data-parsley-required/>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label for="lastname" class="col-sm-2 control-label">FirstName</label>
+					<label class="col-sm-2 control-label">Last Name</label>
 					<div class="col-sm-10">
-						{{ Form::input('text', 'lastname', $details['lastName'], ['class'=>'form-control', 'id'=>'firstname', 'placeholder'=>'Last Name']) }}
+						<input type="text" class="form-control" rv-value="details.lastName" placeholder="Last Name" data-parsley-required/>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label class="col-sm-2 control-label">Free Slots</label>
-
-					<div class="col-sm-10">
-						<?php $i=1; ?>
-						@foreach ($details['freeSlots'] as $value)
-							<div class="col-sm-4">
-								{{ Form::select('day'.$i, $weekdays, $value['day'], ['class'=>'form-control']) }}
-							</div>
-							<div class="col-sm-3">
-								{{ Form::select('time'.$i, $times, 9, ['class'=>'form-control']) }}
-							</div>
-							<div class="col-sm-3">
-								{{ Form::select('time'.$i, $times, 9, ['class'=>'form-control']) }}
-							</div>
-						@endforeach
-						@for($k = $i; $k < $i+2; $k++)
-							<div class="col-sm-4">
-								{{ Form::select('day', $weekdays, 'Monday', ['class'=>'form-control']) }}
-							</div>
-							<div class="col-sm-3">
-								{{ Form::select('time', $times, '8am', ['class'=>'form-control']) }}
-							</div>
-							<div class="col-sm-3">
-								{{ Form::select('time', $times, 8, ['class'=>'form-control']) }}
-							</div>
-						@endfor
+					<label class="col-sm-2 control-label">Cabin</label>
+					<div class="col-sm-3">
+						<select rv-value="details.cabin.building" class="form-control" data-parsley-required>
+							<option rv-each-building="buildings" rv-text="building.label" rv-value="building.value"></option>
+						</select>
 					</div>
-				</div>
-
-				<div class="form-group">
-					<label class="col-sm-2 control-label">Specializations</label>
-					<div class="col-sm-10">
-						<span class="text-muted">Comma separated</span>
-						{{ Form::textarea('specializations', null, ['class'=>'form-control']) }}
-
+					<div class="col-sm-3">
+						<input type="text" id="room" maxlength="10" class="form-control" rv-value="details.cabin.room" placeholder="Room" data-parsley-required data-parsley-type="digits"/>
 					</div>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" rv-value="details.cabin.cabin" placeholder="Cabin" data-parsley-type="alphanum"/>
+					</div>					
 				</div>
-			</form>
--->
-		<form role="form" class="form-horizontal">
-			<div class="form-group">
-				<label class="col-sm-2 control-label">First Name</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" rv-value="details.firstName" placeholder="First Name"/>
-				</div>
-			</div>
 
-			<div class="form-group">
-				<label class="col-sm-2 control-label">Last Name</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" rv-value="details.lastName" placeholder="First Name"/>
-				</div>
-			</div>
-			
-			<div class="col-sm-6 form-group">
-				<label for="cabin" class="col-sm-4 control-label">Cabin</label>
-				<div class="col-sm-8">
-					<input type="text" class="form-control" rv-value="details.cabin" placeholder="Cabin" />
-				</div>
-			</div>
-
-			<div class="col-sm-6 form-group">
+			<div class="col-sm-12 form-group">
 				<label for="mobile" class="col-sm-2 control-label">Mobile</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" rv-value="details.mobile_no" placeholder="Mobile (No leading zero)" />
+					<input type="text" id="mobile_no" class="form-control" rv-value="details.mobile_no" placeholder="Mobile (No leading zero)" data-parsley-type="digits" data-parsley-maxlength="10" />
 				</div>
 			</div>
 
@@ -185,7 +150,7 @@
 					<div rv-each-specialization="details.specializations">
 						<div class="form-group">
 							<div class="input-group">
-								<input type="text" class="form-control" rv-value="specialization.value" placeholder="Specialization"/>
+								<input type="text" class="form-control" rv-value="specialization.value" placeholder="Specialization"/data-parsley-required>
 								<div class="input-group-addon"><a href="#" rv-on-click="controller.removeSpecialization">X</a></div>
 							</div>
 						</div>
@@ -201,90 +166,145 @@
 			<div class="form-group">
 				<label for="about_me" class="col-sm-2 control-label">About Me</label>
 				<div class="col-sm-10">
-					<textarea class="form-control" rv-value="details.about_me" placeholder="About Me"></textarea>
+					<textarea id="about_me" class="form-control" rv-value="details.about_me" placeholder="About Me" data-parsley-maxlength="1000"></textarea>
 				</div>
 			</div>
 
 			<div class="form-group text-center">
-				<a href="#" class="btn btn-success" rv-on-click="controller.save">SAVE</a>
+				<button type="submit" class="btn btn-success">SAVE</button>
 				<a href="#" class="btn btn-danger" rv-on-click="controller.cancel">CANCEL</a>
 			</div>
 		</form>
-		</div>
 	</div>
+</div>
 @stop
 
 @section('scripts')
 <script>
-	
-	var controller = {
-		addSlot: function() {
-			model.freeSlots.push({
-				"day": "Monday",
-				"from": 8,
-				"to": 9
-			});
-		},
+	$(document).ready(function() {
+		var controller = {
+			addSlot: function() {
+				model.freeSlots.push({
+					"day": "Monday",
+					"from": 8,
+					"to": 9
+				});
+			},
 
-		removeSlot: function(event, object) {
-			model.freeSlots.splice(object.index, 1);
-		},
+			removeSlot: function(event, object) {
+				model.freeSlots.splice(object.index, 1);
+			},
 
-		addSpecialization: function(event, object) {
-			model.specializations.push({
-				value: ''
-			});
-		},
+			addSpecialization: function(event, object) {
+				model.specializations.push({
+					value: ''
+				});
+			},
 
-		removeSpecialization: function(event, object) {
-			model.specializations.splice(object.index, 1);
-		},
+			removeSpecialization: function(event, object) {
+				model.specializations.splice(object.index, 1);
+			},
 
-		save: function(event, object) {
-			$('#overlay').show();
-			$.ajax({
-				type: "POST",
-				url: '{{ route("professor-edit-post") }}',
-				data: {
-					data: JSON.stringify(model)
-				},
-				success: function(data, status, xhr) {
-					var obj = data;
+			save: function(event, object) {
+				$('#overlay').show();
+				$.ajax({
+					type: "POST",
+					url: '{{ route("professor-edit-post") }}',
+					data: {
+						data: JSON.stringify(model)
+					},
+					success: function(data, status, xhr) {
+						var obj = data;
 
-					if(obj.success === false) {
+						if(obj.success === false) {
+							$('#overlay').hide();
+							alert("FAILED. Please Try Again.");
+						} else {
+							alert("Success!");
+							window.location = "{{ route('professor-profile') }}";
+						}
+					},
+					error: function(xhr, status, err) {
 						$('#overlay').hide();
 						alert("FAILED. Please Try Again.");
-					} else {
-						alert("Success!");
-						window.location = "{{ route('professor-profile') }}";
-					}
-				},
-				error: function(xhr, status, err) {
-					$('#overlay').hide();
-					alert("FAILED. Please Try Again.");
-				},
-				timeout: 20000
-			});
-		},
+					},
+					timeout: 20000
+				});
+			},
 
-		cancel: function(event, object) {
-			window.location = "{{ route('professor-profile') }}";
-		}
-	} 
+			cancel: function(event, object) {
+				window.location = "{{ route('professor-profile') }}";
+			}
+		} 
 
-	model.firstName = details.firstName+'';
-	model.lastName = details.lastName+'';
-	model.freeSlots = details.freeSlots;
-	model.specializations = details.specializations;
-	model.cabin = details.cabin;
-	model.mobile_no = details.mobile_no;
-	model.about_me = details.about_me;
+		model.firstName = details.firstName+'';
+		model.lastName = details.lastName+'';
+		model.freeSlots = details.freeSlots;
+		model.specializations = details.specializations;
+		model.cabin = details.cabin;
+		model.mobile_no = details.mobile_no;
+		model.about_me = details.about_me;
 
-	var view = rivets.bind($('#editForm'), {
-		details: model,
-		controller: controller,
-		times: times,
-		weekdays: weekdays
+
+		var view = rivets.bind($('#editForm'), {
+			details: model,
+			controller: controller,
+			times: times,
+			weekdays: weekdays,
+			buildings: buildings
+		});
+
+    $('#form_edit').parsley().subscribe('parsley:form:validate', function (formInstance) {
+    	formInstance.submitEvent.preventDefault();
+    	if (formInstance.isValid()) {
+	      console.log("valid!");
+    		$('#overlay').show();
+				$.ajax({
+					type: "POST",
+					url: '{{ route("professor-edit-post") }}',
+					data: {
+						data: JSON.stringify(model)
+					},
+					success: function(data, status, xhr) {
+						var obj = data;
+
+						if(obj.success === false) {
+							$('#overlay').hide();
+							alert("FAILED. Please Try Again.");
+						} else {
+							alert("Success!");
+							window.location = "{{ route('professor-profile') }}";
+						}
+					},
+					error: function(xhr, status, err) {
+						$('#overlay').hide();
+						alert("FAILED. Please Try Again.");
+					},
+					timeout: 20000
+				});  
+	    }
+    });
+
+    $('#room').keypress(function(ev) {
+			if(!(event.keyCode >= 48 && event.keyCode <= 57)) {
+				ev.preventDefault();
+			}
+			if($('#room').val().length >= 3) {
+				ev.preventDefault();
+			}
+		});
+
+		$('#mobile_no').keypress(function(ev) {
+			if(!(event.keyCode >= 48 && event.keyCode <= 57)) {
+				ev.preventDefault();
+			}
+			if($('#mobile_no').val().length === 0 && event.keyCode == 48) {
+				ev.preventDefault();
+			} 
+			if($('#mobile_no').val().length >= 10) {
+				ev.preventDefault();
+			}
+		});
 	});
 </script>
 @stop

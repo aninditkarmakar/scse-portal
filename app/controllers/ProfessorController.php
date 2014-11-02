@@ -164,6 +164,7 @@ class ProfessorController extends \BaseController {
 		$data['lastName'] = $faculty->lastname;
 		$data['name'] = $data['firstName'].' '.$data['lastName'];
 		$data['email'] = $user->email;
+		$data['cabin'] = $faculty->cabin;
 
 		$freeSlots = $faculty->getFreeSlots();
 		$data['freeSlots'] = $freeSlots;
@@ -180,7 +181,7 @@ class ProfessorController extends \BaseController {
 		foreach($projects as $project) {
 			$item['id'] = $project->id;
 			$item['title'] = $project->title;
-			$item['abstract'] = $project->project_abstract->abstract;
+			$item['abstract'] = nl2br($project->project_abstract->abstract);
 			$item['type'] = $project->project_type->type;
 			$item['start_date'] = $project->start_date;
 			$item['end_date'] = $project->end_date;
@@ -246,7 +247,7 @@ class ProfessorController extends \BaseController {
 		$faculty->firstname = ucfirst($data['firstName']);
 		$faculty->lastname = ucfirst($data['lastName']);
 		$faculty->faculty_code = $data['facCode'];
-		$faculty->cabin = strtoupper($data['building'].' '.$data['room'].'-'.$data['cabin']);
+		$faculty->cabin = strtoupper($data['building'].'-'.$data['room'].'-'.$data['cabin']);
 		$faculty->designation = $data['designation'];
 		$faculty->mobile_no = $data['mobile_no'];
 
@@ -312,9 +313,14 @@ class ProfessorController extends \BaseController {
 		$data['firstName'] = $faculty->firstname;
 		$data['lastName'] = $faculty->lastname;
 		$data['name'] = $data['firstName'].' '.$data['lastName'];
-		$data['cabin'] = $faculty->cabin;
+		//$data['cabin'] = $faculty->cabin;
 		$data['mobile_no'] = $faculty->mobile_no;
 		$data['about_me'] = $faculty->about_me;
+
+		$cabin = explode('-',$faculty->cabin);
+		$data['cabin']['building'] = $cabin[0];
+		$data['cabin']['room'] = $cabin[1];
+		$data['cabin']['cabin'] = $cabin[2];
 
 		$freeSlots = $faculty->getFreeSlots();
 		$data['freeSlots'] = $freeSlots;
@@ -342,10 +348,10 @@ class ProfessorController extends \BaseController {
 			return Response::make(json_encode($returnData), 400)->header('Content-Type', 'application/json');
 		}
 
-		if(!isset($input['cabin'])) {
+		if(!isset($input['cabin']['building'])||!isset($input['cabin']['room'])||!isset($input['cabin']['cabin'])) {
 			return Response::make(json_encode($returnData), 400)->header('Content-Type', 'application/json');
 		} else {
-			$faculty->cabin = $input['cabin'];
+			$faculty->cabin = $input['cabin']['building'].'-'.$input['cabin']['room'].'-'.$input['cabin']['cabin'];
 		}
 
 		if(isset($input['about_me'])) {
@@ -496,8 +502,8 @@ class ProfessorController extends \BaseController {
 
 		try {
 			$project->project_abstract->delete();
-			$project->students()->delete();
-			$project->tags()->delete();
+			$project->students()->detach();
+			$project->tags()->detach();
 			$project->delete();
 		} catch (\PDOException $e) {
 			DB::rollback();

@@ -28,7 +28,7 @@
 					<div class="alert alert-danger" role="alert">{{ $message }}</div>
 				@endforeach
 
-				{{ Form::open(array('url'=>route('professor-edit-project-post', ['id'=>$info['id']]), 'files'=>true, 'method'=>'post', 'role'=>'form', 'class'=>'form-horizontal')) }}
+				{{ Form::open(array('url'=>route('professor-edit-project-post', ['id'=>$info['id']]), 'files'=>true, 'method'=>'post', 'role'=>'form', 'class'=>'form-horizontal', 'novalidate'=>'novalidate', 'data-parsley-validate'=>'true')) }}
 					
 					<div class="form-group">
 						<label for="title" class="col-sm-2 control-label">Title</label>
@@ -61,7 +61,7 @@
 					<div class="form-group">
 						<label for="type" class="col-sm-2 control-label">End Date</label>
 						<div class="col-sm-10">
-							<input type="date" name="end_date" class="form-control" required value="{{ $info['end_date'] }}"/>
+							<input type="date" name="end_date" class="form-control" value="{{ $info['end_date'] }}"/>
 						</div>
 					</div>
 
@@ -70,6 +70,7 @@
 						<div class="col-sm-10">
 							{{ Form::file('file', '', array('class'=>'filestyle', 'data-icon'=>'false', 'required'=>'required')) }}
 						</div>
+						<input type="hidden" name="file_uploaded" value="{{ isset($info['filename'])?'1':'0' }}"/>
 					</div>
 
 					<div class="form-group">

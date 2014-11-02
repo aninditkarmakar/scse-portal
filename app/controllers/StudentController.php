@@ -163,7 +163,7 @@ class StudentController extends \BaseController {
 		foreach($student->projects as $project) {
 			$item['id'] = $project->id;
 			$item['title'] = $project->title;
-			$item['abstract'] = $project->project_abstract->abstract;
+			$item['abstract'] = nl2br($project->project_abstract->abstract);
 			$item['type'] = $project->project_type->type;
 			$item['start_date'] = $project->start_date;
 			$item['end_date'] = $project->end_date;
