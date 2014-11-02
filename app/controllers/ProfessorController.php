@@ -175,8 +175,22 @@ class ProfessorController extends \BaseController {
 
 		$projects = Project::with('projectAbstract', 'students', 'projectType')->where('faculty_id','=',$faculty->id)->get();
 
+		$data['projects'] = array(); //$projects->toArray();
 
-		$data['projects'] = $projects->toArray();
+		foreach($projects as $project) {
+			$item['id'] = $project->id;
+			$item['title'] = $project->title;
+			$item['abstract'] = $project->project_abstract->abstract;
+			$item['type'] = $project->project_type->type;
+			$item['start_date'] = $project->start_date;
+			$item['end_date'] = $project->end_date;
+			$item['filename'] = $project->filename;
+			$item['students'] = $project->students->toArray();
+
+			array_push($data['projects'], $item); 
+		}
+
+		
 
 		return View::make('professor.profile')->with('details', $data);
 	}

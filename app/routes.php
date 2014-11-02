@@ -15,8 +15,9 @@ Route::get('/', array('as' => 'home', function() {
 	return View::make('home');
 }));
 
-Route::get('show-professor/{id}', array('as'=>'show-professor-profile', 'uses'=>'ProfessorController@profilePage'));
-
+Route::get('show-professor/{id}', array('as'=>'show-professor-profile', 'uses'=>'ProfessorController@profilePage'))->where('id','\d+');
+Route::get('show-student/{regNo}', array('as'=>'show-student-regno', 'uses'=>'StudentController@showProfileRegNo'))->where('regNo', '\d{2}[(A-Z)+(a-z)]{3}\d{4}');
+Route::get('show-project/{id}', array('as'=>'show-project', 'uses'=>'ProjectController@showProject'))->where('id','\d+');
 // Route::group(array('prefix'=>'user_files/faculty'), function() {
 // });
 
@@ -48,12 +49,12 @@ Route::group(array('before'=>'auth'), function() {
 		Route::get('add-project', array('as'=>'professor-add-project', 'uses'=>'ProfessorController@showAddProjectPage'));
 		Route::post('add-project', array('as'=>'professor-add-project-post', 'uses'=>'ProfessorController@addProject'));
 		
-		Route::get('edit-project/{id}', array('as'=>'professor-edit-project', 'uses'=>'ProjectController@editProjectPage'));
-		Route::post('edit-project/{id}', array('as'=>'professor-edit-project-post', 'uses'=>'ProjectController@editProject'));
+		Route::get('edit-project/{id}', array('as'=>'professor-edit-project', 'uses'=>'ProjectController@editProjectPage'))->where('id','\d+');
+		Route::post('edit-project/{id}', array('as'=>'professor-edit-project-post', 'uses'=>'ProjectController@editProject'))->where('id','\d+');
 		
 		Route::post('upload/publications-list', array('as'=>'professor-upload-publications', 'uses'=>'FileController@professorPublicationUpload'));
 
-		Route::get('delete-project/{id}', array('as'=>'professor-delete-project', 'uses'=>'ProfessorController@deleteProject'));
+		Route::get('delete-project/{id}', array('as'=>'professor-delete-project', 'uses'=>'ProfessorController@deleteProject'))->where('id', '\d+');
 		// Route::get
 	});
 });

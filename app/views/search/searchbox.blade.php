@@ -47,7 +47,13 @@
 	$('#search_input').bind('typeahead:selected', function(obj, datum, name) {      
         console.log(datum.id);
         var baseUrl = "{{ URL::to('/') }}"
-        window.location =baseUrl+'/show-professor/'+datum.id;
+        if(searchSelected === 'fac_code' || searchSelected === 'fac_name') {
+        	window.location = baseUrl+'/show-professor/'+datum.id;
+        }
+        if(searchSelected === 'proj_title' || searchSelected === 'proj_tags') {
+        	console.log("project");
+        	window.location = baseUrl+'/show-project/'+datum.id;
+        }
 	});
 </script>
 @stop

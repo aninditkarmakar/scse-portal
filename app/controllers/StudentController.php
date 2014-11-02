@@ -148,4 +148,32 @@ class StudentController extends \BaseController {
 
 		return Redirect::route('add-student')->with('success', $returnData['success']);;
 	}
+
+	public function showProfileRegNo($regNo) {
+		$student = Student::with('projects.projectType', 'projects.projectAbstract', 'projects.students')->where('reg_no', 'like', $regNo)->first();
+
+		$results = array();
+
+		$results['id'] = $student->id;
+		$results['name'] = $student->firstname.' '.$student->lastname;
+		$results['reg_no'] = $student->reg_no;
+		$results['email'] = $student->email;
+		$results['projects'] = array();
+
+		foreach($student->projects as $project) {
+			$item['id'] = $project->id;
+			$item['title'] = $project->title;
+			$item['abstract'] = $project->project_abstract->abstract;
+			$item['type'] = $project->project_type->type;
+			$item['start_date'] = $project->start_date;
+			$item['end_date'] = $project->end_date;
+			$item['filename'] = $project->filename;
+			$item['students'] = $project->students->toArray();
+
+			array_push($results['projects'], $item);
+
+		}
+
+		return View::make('studentProfile', array('data'=>$results));
+	}
 }

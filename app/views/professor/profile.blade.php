@@ -321,7 +321,7 @@
 					<h4 class="modal-title">{{$project['title']}}</h4>
 				</div>
 				<div class="modal-body">
-					<p>{{ $project['project_abstract']['abstract'] }}</p>
+					<p>{{ $project['abstract'] }}</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -338,45 +338,7 @@
 					<h4 class="modal-title">{{$project['title']}}</h4>
 				</div>
 				<div class="modal-body">
-					<div class="row">
-						<div class="col-sm-7">
-							<div class="col-sm-3"><label class="control-label">Type:</label></div>
-							<div class="col-sm-9"><span>{{ $project['project_type']['type'] }}</span></div>
-							<div class="clearfix"></div>
-							
-							<div class="col-sm-3"><label class="control-lavel">Start Date:</label></div>
-							<div class="col-sm-9">{{ $project['start_date'] }}</div>
-							<div class="clearfix"></div>
-								
-							@if($project['end_date'] !== '0000-00-00')
-							<div class="col-sm-3"><label class="control-lavel">End Date:</label></div>
-							<div class="col-sm-9">{{ $project['end_date'] }}</div>
-							<div class="clearfix"></div>
-							@endif
-
-							<div class="col-sm-3"><label class="control-lavel">PDF File:</label></div>
-							<div class="col-sm-9">
-								<a href="{{ route('project-pdf-download', ['filename'=>$project['filename']]) }}" target="_blank">Download</a>
-							</div>
-							<div class="clearfix"></div>
-
-						</div>
-						<div class="col-sm-5">
-							
-							<table class="table-striped">
-								<th>Students</th>
-								@if(count($project['students']) === 0)
-									<tr><td>-</td></tr>
-								@endif
-								@foreach($project['students'] as $student)
-									<tr>
-										<td>{{$student['firstname'].' '.$student['lastname'].' ('.$student['reg_no'].')'}}</td>
-									</tr>
-								@endforeach
-							</table>
-
-						</div>
-					</div>
+					@include('layouts.projectDetailsModal', array('project'=>$project))
 				</div>
 				<div class="modal-footer"></div>
 			</div>

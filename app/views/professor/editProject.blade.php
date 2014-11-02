@@ -13,7 +13,7 @@
 @section('header-scripts')
 	<script type="text/javascript" src="{{asset('js/bootstrap-filestyle.js')}}"> </script>
 	<script src="{{asset('js/typeahead.min.js')}}"></script>
-@stop
+@append
 
 @section('body')
 	<div id="overlay"></div>

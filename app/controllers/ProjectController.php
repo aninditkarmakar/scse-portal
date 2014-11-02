@@ -217,4 +217,23 @@ class ProjectController extends \BaseController {
 
 		return Redirect::route('professor-profile');
 	}
+
+	public function showProject($id) {
+		$project = Project::with('students', 'projectType', 'projectAbstract', 'mentor')->where('id','=',$id)->first();
+
+		$results = array(
+				'id' => $project->id,
+				'title' => $project->title,
+				'abstract' => $project->project_abstract->abstract,
+				'type' => $project->project_type->type,
+				'start_date' => $project->start_date,
+				'end_date' => $project->end_date,
+				'filename' => $project->filename,
+				'professor_name' => $project->mentor->firstname.' '.$project->mentor->lastname,
+				'professor_id' => $project->mentor->id,
+			);
+		$results['students'] = $project->students->toArray();
+
+		return View::make('projectProfile', ['data'=>$results]);
+	}
 }

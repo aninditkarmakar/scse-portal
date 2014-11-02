@@ -1,7 +1,7 @@
 @section('selectors')
 <div class="search-options btn-toolbar" role="toolbar">
 	<div class="row" id="search_options">
-		<div class="col-xs-12 col-md-4 text-center">
+		<div class="col-xs-12 col-md-6 text-center">
 			<span class="text-muted">Project</span>
 			<div class="clearfix"></div>
 			<div class="btn-group btn-group-sm">
@@ -10,7 +10,7 @@
 			</div>
 		</div>
 
-		<div class="col-xs-12 col-md-4 text-center">
+		<div class="col-xs-12 col-md-6 text-center">
 			<span class="text-muted">Faculty</span>
 			<div class="clearfix"></div>
 			<div class="btn-group btn-group-sm">
@@ -19,6 +19,7 @@
 			</div>
 		</div>
 
+<!--
 		<div class="col-xs-12 col-md-4 text-center">
 			<span class="text-muted">Subject</span>
 			<div class="clearfix"></div>
@@ -27,12 +28,13 @@
 				<button type="button" class="btn btn-default" id="sub_code">Subject Code</button>
 			</div>
 		</div>
-
+-->
 	</div>
 </div>
 @stop
 @section('selector-scripts')
 	<script>
+		var searchSelected = 'proj_title';
 		function setActive(elem) {
 			buttons = [
 				$('#proj_title'),
@@ -50,28 +52,34 @@
 
 		var searchUrl='{{ route("search-project-title") }}';
 		$('#proj_title').click(function() {
+			searchSelected = 'proj_title';
 			searchUrl = '{{ route("search-project-title") }}';
 			setActive($('#proj_title'));
 		});
 		$('#proj_tags').click(function() {
+			searchSelected = 'proj_tags';
 			searchUrl = '{{ route("search-project-tags") }}';
 			setActive($('#proj_tags'));
 		});
 		$('#fac_name').click(function() {
+			searchSelected = 'fac_name';
 			searchUrl = '{{ route("search-faculty-name") }}';
 			setActive($('#fac_name'));
 		});
 		$('#fac_code').click(function() {
+			searchSelected = 'fac_code';
 			searchUrl = '{{ route("search-faculty-code") }}';
 			setActive($('#fac_code'));
 		});
-		$('#sub_name').click(function() {
-			searchUrl = '{{ route("search-subject-name") }}';
-			setActive($('#sub_name'));
-		});
-		$('#sub_code').click(function() {
-			searchUrl = '{{ route("search-subject-code") }}';
-			setActive($('#sub_code'));
-		});
+		// $('#sub_name').click(function() {
+		//	searchSelected = 'sub_name';
+		// 	searchUrl = '{{ route("search-subject-name") }}';
+		// 	setActive($('#sub_name'));
+		// });
+		// $('#sub_code').click(function() {
+		//	searchSelected = 'sub_code';
+		// 	searchUrl = '{{ route("search-subject-code") }}';
+		// 	setActive($('#sub_code'));
+		// });
 	</script>
 @stop
