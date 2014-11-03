@@ -16,6 +16,14 @@
 
 @section('body')
 <div class="container">
+	<div class="row">
+		<div class="col-sm-12">
+			<h3>Add Professor</h3>
+			<hr/>
+		</div>
+	</div>
+	
+
 	@foreach($errors->all() as $message)
 		<div class="alert alert-danger" role="alert">{{ $message }}</div>
 	@endforeach

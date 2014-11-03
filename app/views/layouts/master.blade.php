@@ -24,11 +24,10 @@
 </head>
 
 <body>
-	<div class="container">
-		@section('header')
-			@include('layouts.header')
-		@show
-
+	@section('header')
+		@include('layouts.header')
+	@show
+	<div class="container-fluid">
 		@section('body')
 
 		@show
