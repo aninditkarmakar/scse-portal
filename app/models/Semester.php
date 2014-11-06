@@ -17,4 +17,8 @@ class Semester extends \Eloquent {
 		return (int) $value;
 	}
 
+	public function projects() {
+		return $this->hasMany('Project', 'semester_id', 'id');
+	}
+
 }

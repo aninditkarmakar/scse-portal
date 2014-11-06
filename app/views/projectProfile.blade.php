@@ -60,10 +60,20 @@
 
 				<div class="row">
 					<div class="col-xs-6">
-						<span><strong>Type:</strong></span>
+						<span><strong>Degree Level:</strong></span>
 					</div>
 					<div class="col-xs-6 text-center">
 						<span>{{ $data['type'] }}</span>
+					</div>
+				</div>
+				<br/>
+
+				<div class="row">
+					<div class="col-xs-6">
+						<span><strong>Semester:</strong></span>
+					</div>
+					<div class="col-xs-6 text-center">
+						<span>{{ $data['semester'] }}</span>
 					</div>
 				</div>
 				<br/>

@@ -175,7 +175,7 @@ class ProfessorController extends \BaseController {
 		$data['mobile_no'] = $faculty->mobile_no;
 		$data['subjects'] = $faculty->getSubjects();
 
-		$projects = Project::with('projectAbstract', 'students', 'projectType')->where('faculty_id','=',$faculty->id)->get();
+		$projects = Project::with('projectAbstract', 'students', 'projectType', 'semester')->where('faculty_id','=',$faculty->id)->get();
 
 		$data['projects'] = array(); //$projects->toArray();
 
@@ -210,6 +210,9 @@ class ProfessorController extends \BaseController {
 			$item['end_date'] = $project->end_date;
 			$item['filename'] = $project->filename;
 			$item['students'] = $project->students->toArray();
+			if(!is_null($project->semester)) {
+				$item['semester'] = $project->semester->type.' '.$project->semester->start_year.'-'.$project->semester->end_year;
+			}
 
 			array_push($data['projects'], $item); 
 		}
@@ -440,6 +443,7 @@ class ProfessorController extends \BaseController {
 		$info['type'] = Input::get('type');
 		$info['start_date'] = Input::get('start_date');
 		$info['end_date'] = Input::get('end_date');
+		$info['semester_id'] = Input::get('semester_id');
 
 		$rules = array(
 				'title'=>'required',

@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-sm-7">
-		<div class="col-sm-3"><label class="control-label">Type:</label></div>
+		<div class="col-sm-3"><label class="control-label">Degree:</label></div>
 		<div class="col-sm-9"><span>{{ $project['type'] }}</span></div>
 		<div class="clearfix"></div>
 		
@@ -44,6 +44,14 @@
 		</table>
 
 	</div>
+	<div class="clearfix"></div>
+	<div class="col-sm-7">
+		<div class="col-sm-3"><label class="control-label">Abstract:</label></div>
+		<div class="col-sm-9">
+			<p>{{ $project['abstract'] }}</p>
+		</div>
+	</div>
+	
 	<div class="col-sm-12 text-center">
 		<a href="{{ route('show-project', ['id'=>$project['id']]) }}" class="btn btn-default">Go to project page</a>
 	</div>

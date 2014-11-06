@@ -28,4 +28,8 @@ class Project extends \Eloquent {
 	public function tags() {
 		return $this->belongsToMany('ProjectTag', 'projects_has_project_tags', 'project_id', 'project_tag_id');
 	}
+
+	public function semester() {
+		return $this->belongsTo('Semester', 'semester_id', 'id');
+	}
 }

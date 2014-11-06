@@ -203,22 +203,26 @@
 				<table class="table table-striped table-condensed">
 					<thead>
 						<tr>
+							<th class="text-center">Semester</th>
 							<th class="text-center">Title</th>
-							<th class="text-center">Abstract</th>
 						</tr>
 					</thead>
 					<tbody>
 						@foreach($data['projects'] as $project)
 							<tr id="project_{{ $project['id'] }}">
-								<td><a href="#" data-toggle="modal" data-target="#proj_detail_{{$project['id']}}">{{ $project['title'] }}</a></td>
+								<td class="text-center">{{ isset($project['semester'])?$project['semester']:'-' }}</td>
 								<td class="text-center">
-									<button class="btn btn-default" data-toggle="modal" data-target="#abstract_{{$project['id']}}">Abstract</button>
+									<a href="#" data-toggle="modal" data-target="#proj_detail_{{$project['id']}}">{{ $project['title'] }}</a>
 									@if($data['myPage'] === true)
 										<div class="pull-right" id="edit_{{ $project['id'] }}">
 											<a href="{{ route('professor-edit-project', ['id'=>$project['id']]) }}"><i class="glyphicon glyphicon-edit"></i></a>
 										</div>
 									@endif
 								</td>
+								<!--<td class="text-center">
+									<button class="btn btn-default" data-toggle="modal" data-target="#abstract_{{$project['id']}}">Abstract</button>
+									
+								</td>-->
 							</tr>
 						@endforeach
 					</tbody>

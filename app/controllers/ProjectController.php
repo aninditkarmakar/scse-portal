@@ -120,10 +120,23 @@ class ProjectController extends \BaseController {
 		$info['filename'] = $project->filename;
 		$info['student_ids'] = $student_ids;
 		$info['student_regnos'] = $student_regnos;
+		$info['semester_id'] = $project->semester_id;
 
 		$project_types = ProjectType::all()->toArray();
 
-		return View::make('professor.editProject', array('info'=>$info, 'project_types'=>$project_types));
+		$sem_list = DB::table('semesters')->select('id','type', 'start_year', 'end_year')->orderBy('start_year','desc')->remember(10)->get();
+		$semester_list = [];
+
+		foreach($sem_list as $semester) {
+			$semester_list[$semester->id] = $semester->type.' '.$semester->start_year.'-'.$semester->end_year;
+			// $item = [];
+			// $item['name'] = 
+			// $item['id'] = $semester->id;
+
+			// array_push($semester_list, $item);
+		}
+
+		return View::make('professor.editProject', array('info'=>$info, 'project_types'=>$project_types, 'semester_list'=>$semester_list));
 	}
 
 	public function editProject($id) {
@@ -134,6 +147,7 @@ class ProjectController extends \BaseController {
 		$info['title'] = Input::get('title');
 		$info['abstract'] = Input::get('abstract');
 		$info['student_ids'] = explode(', ',Input::get('student_ids'));
+		$info['semester_id'] = Input::get('semester_id');
 		
 		array_pop($info['student_ids']);
 
@@ -148,6 +162,7 @@ class ProjectController extends \BaseController {
 				'student_ids' => 'required',
 				'type'=>'required',
 				'start_date' => 'required',
+				'semester_id' => 'required|numeric',
 				//'end_date' => 'required',
 			);
 		$validator = Validator::make($info, $rules);
@@ -204,6 +219,7 @@ class ProjectController extends \BaseController {
 			$project->faculty_id = $faculty->id;
 			$project->start_date = $info['start_date'];
 			$project->end_date = $info['end_date'];
+			$project->semester_id = $info['semester_id'];
 			if(isset($info['file_name'])) {
 				$project->filename = $info['file_name'];
 			}			
@@ -240,7 +256,7 @@ class ProjectController extends \BaseController {
 	}
 
 	public function showProject($id) {
-		$project = Project::with('students', 'projectType', 'projectAbstract', 'mentor')->where('id','=',$id)->first();
+		$project = Project::with('students', 'projectType', 'projectAbstract', 'mentor', 'semester')->where('id','=',$id)->first();
 
 		$results = array(
 				'id' => $project->id,
@@ -252,6 +268,7 @@ class ProjectController extends \BaseController {
 				'filename' => $project->filename,
 				'professor_name' => $project->mentor->firstname.' '.$project->mentor->lastname,
 				'professor_id' => $project->mentor->id,
+				'semester' => $project->semester->type.' '.$project->semester->start_year.'-'.$project->semester->end_year,
 			);
 		$results['students'] = $project->students->toArray();
 

@@ -7,7 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'AddColumnToFacultiesHasSubjectsTable' => $baseDir . '/app/database/migrations/2014_09_27_124216_add_column_to_faculties_has_subjects_table.php',
-    'AddColumnToFacultiesTable' => $baseDir . '/app/database/migrations/2014_10_28_160000_add_column_to_faculties_Table.php',
+    'AddColumnToFacultiesTable' => $baseDir . '/app/database/migrations/2014_10_06_132628_add_column_to_faculties_table.php',
     'AddColumnToProjectsTable' => $baseDir . '/app/database/migrations/2014_10_06_125030_add_column_to_projects_table.php',
     'AddColumnToUsersTable' => $baseDir . '/app/database/migrations/2014_09_22_165809_add_column_to_users_table.php',
     'AdminController' => $baseDir . '/app/controllers/AdminController.php',
@@ -266,6 +266,7 @@ return array(
     'Faker\\Provider\\zh_CN\\Person' => $vendorDir . '/fzaninotto/faker/src/Faker/Provider/zh_CN/Person.php',
     'Faker\\Provider\\zh_CN\\PhoneNumber' => $vendorDir . '/fzaninotto/faker/src/Faker/Provider/zh_CN/PhoneNumber.php',
     'Faker\\UniqueGenerator' => $vendorDir . '/fzaninotto/faker/src/Faker/UniqueGenerator.php',
+    'FileController' => $baseDir . '/app/controllers/FileController.php',
     'File_ANSI' => $vendorDir . '/phpseclib/phpseclib/phpseclib/File/ANSI.php',
     'File_ASN1' => $vendorDir . '/phpseclib/phpseclib/phpseclib/File/ASN1.php',
     'File_ASN1_Element' => $vendorDir . '/phpseclib/phpseclib/phpseclib/File/ASN1.php',
@@ -1177,6 +1178,7 @@ return array(
     'ProfessorController' => $baseDir . '/app/controllers/ProfessorController.php',
     'Project' => $baseDir . '/app/models/Project.php',
     'ProjectAbstract' => $baseDir . '/app/models/ProjectAbstract.php',
+    'ProjectController' => $baseDir . '/app/controllers/ProjectController.php',
     'ProjectTableSeeder' => $baseDir . '/app/database/seeds/ProjectTableSeeder.php',
     'ProjectTag' => $baseDir . '/app/models/ProjectTag.php',
     'ProjectTagTableSeeder' => $baseDir . '/app/database/seeds/ProjectTagTableSeeder.php',

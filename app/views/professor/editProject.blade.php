@@ -45,7 +45,7 @@
 					</div>
 
 					<div class="form-group">
-						<label for="type" class="col-sm-2 control-label">Project Type</label>
+						<label for="type" class="col-sm-2 control-label">Degree Level</label>
 						<div class="col-sm-10">
 							{{ Form::select('type', $types, $info['type'], ['class'=>'form-control', 'required'=>'required']) }}
 						</div>
@@ -62,6 +62,13 @@
 						<label for="type" class="col-sm-2 control-label">End Date</label>
 						<div class="col-sm-10">
 							<input type="date" name="end_date" class="form-control" value="{{ $info['end_date'] }}"/>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="type" class="col-sm-2 control-label">Semester</label>
+						<div class="col-sm-10">
+							{{ Form::select('semester_id', $semester_list, $info['semester_id'], ['class'=>'form-control', 'required'=>'required']) }}
 						</div>
 					</div>
 
