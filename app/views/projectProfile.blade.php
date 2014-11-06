@@ -73,7 +73,7 @@
 						<span><strong>Semester:</strong></span>
 					</div>
 					<div class="col-xs-6 text-center">
-						<span>{{ $data['semester'] }}</span>
+						<span>{{ isset($data['semester'])?$data['semester']:'-'; }}</span>
 					</div>
 				</div>
 				<br/>

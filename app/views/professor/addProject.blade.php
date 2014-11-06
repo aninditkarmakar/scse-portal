@@ -11,7 +11,13 @@
 
 @section('header-scripts')
 	<script type="text/javascript" src="{{asset('js/bootstrap-filestyle.js')}}"> </script>
+	<script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"></script>
 	<script src="{{asset('js/typeahead.min.js')}}"></script>
+
+	<script>
+	    webshims.setOptions('forms-ext', {types: 'date'});
+		webshims.polyfill('forms forms-ext');
+	</script>
 @append
 
 @section('body')
@@ -43,9 +49,16 @@
 					</div>
 
 					<div class="form-group">
-						<label for="type" class="col-sm-2 control-label">Project Type</label>
+						<label for="type" class="col-sm-2 control-label">Degree Level</label>
 						<div class="col-sm-10">
 							{{ Form::select('type', $types, '1', ['class'=>'form-control', 'required'=>'required']) }}
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="type" class="col-sm-2 control-label">Semester</label>
+						<div class="col-sm-10">
+							{{ Form::select('semester_id', $semester_list, $default_sem, ['class'=>'form-control', 'required'=>'required']) }}
 						</div>
 					</div>
 

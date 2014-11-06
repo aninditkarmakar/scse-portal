@@ -426,7 +426,21 @@ class ProfessorController extends \BaseController {
 	public function showAddProjectPage() {
 		$projectTypes = ProjectType::all()->toArray();
 
-		return View::make('professor.addProject', array('project_types'=>$projectTypes));
+		$sem_list = DB::table('semesters')->select('id','type', 'start_year', 'end_year')->orderBy('start_year','desc')->remember(10)->get();
+		$semester_list = [];
+		//dd($sem_list[0]->id);
+		$default_semester = $sem_list[0]->id;
+
+		foreach($sem_list as $semester) {
+			$semester_list[$semester->id] = $semester->type.' '.$semester->start_year.'-'.$semester->end_year;
+			// $item = [];
+			// $item['name'] = 
+			// $item['id'] = $semester->id;
+
+			// array_push($semester_list, $item);
+		}
+
+		return View::make('professor.addProject', array('project_types'=>$projectTypes, 'semester_list'=>$semester_list, 'default_sem'=>$default_semester));
 	}
 
 	public function addProject() {
@@ -469,12 +483,13 @@ class ProfessorController extends \BaseController {
 			return Redirect::route('professor-add-project')->withErrors(['message'=>'Filesize should be less than '.$maxFileSize.'MB'])->withInput();
 		}
 
-		if($file->getClientOriginalExtension() !== 'pdf') {
+
+		if(! in_array($file->getClientOriginalExtension(), ['pdf','doc','docx']) ) {
 			return Redirect::route('professor-add-project')->withErrors(['message'=>'File should be in PDF format'])->withInput();
 		}
 
 		
-		$info['file_name'] = $faculty->id.'_'.str_replace(' ', '_', $info['title']).'.pdf';
+		$info['file_name'] = $faculty->id.'_'.str_replace(' ', '_', $info['title']).'.'.$file->getClientOriginalExtension();
 
 		$filePath = $basePath.'/user_files/faculty/projects/';
 
@@ -490,6 +505,7 @@ class ProfessorController extends \BaseController {
 			$project->start_date = $info['start_date'];
 			$project->end_date = $info['end_date'];
 			$project->filename = $info['file_name'];
+			$project->semester_id = $info['semester_id'];
 
 			$project->save();
 

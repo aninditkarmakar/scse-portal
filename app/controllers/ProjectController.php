@@ -268,8 +268,12 @@ class ProjectController extends \BaseController {
 				'filename' => $project->filename,
 				'professor_name' => $project->mentor->firstname.' '.$project->mentor->lastname,
 				'professor_id' => $project->mentor->id,
-				'semester' => $project->semester->type.' '.$project->semester->start_year.'-'.$project->semester->end_year,
 			);
+
+		if($project->semester !== null) {
+			$results['semester'] = $project->semester->type.' '.$project->semester->start_year.'-'.$project->semester->end_year;
+		}
+
 		$results['students'] = $project->students->toArray();
 
 		return View::make('projectProfile', ['data'=>$results]);
