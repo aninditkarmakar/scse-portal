@@ -10,6 +10,7 @@
 @append
 
 @section('body')
+<div id="overlay"></div>
 <div class="container">
 
 	<div class="row">
@@ -149,8 +150,15 @@
 	<div class="row">
 		<div class="col-xs-12 text-center">
 			<h3>Subjects</h3>
+			@if($data['myPage'] === true)
+				<i class="glyphicon glyphicon-plus pull-right" data-toggle="modal" data-target="#add_subject"></i>
+			@endif
 		</div>
-		<div class="col-xs-12">
+	
+		@if(count($data['subjects']) === 0)
+			<div class="text-center"><span>-</span></div>
+		@else
+		<div class="col-sm-12">
 			<table class="table table-striped">
 				<thead>
 					<tr>
@@ -158,36 +166,36 @@
 						<th class="text-center">Semester</th>
 					</tr>
 				</thead>
+				
 				<tbody>
-					<tr>
-						<td>CSE235 - Data Structures and Algorithms</td>
-						<td>Fall 2014-15</td>
+					@foreach($data['subjects'] as $subject)
+					<tr id="subject_{{$subject->id}}">
+						<td>{{$subject->subject_code.' - '.$subject->subject}}</td>
+						<td>
+							{{$subject->semester_type.' '.$subject->start_year.'-'.$subject->end_year}}
+							@if($data['myPage'] === true)
+								<div class="pull-right" id="delete_subject_{{ $subject->id }}">
+									<i class="glyphicon glyphicon-remove" onclick="deleteSubject({{$subject->id}})"></i>
+								</div>
+							@endif
+						</td>
 					</tr>
-					<tr>
-						<td>CSE236 - Object Oriented Paradigm and Programming</td>
-						<td>Winter 2013-14</td>
-					</tr>
-					<tr>
-						<td>CSE232 - Algorithm Design and Analysis</td>
-						<td>Fall 2013-14</td>
-					</tr>
-					<tr>
-						<td>CSE231 - Soft Computing</td>
-						<td>Fall 2013-14</td>
-					</tr>
+					@endforeach
 				</tbody>
+
 			</table>
 		</div>
+		@endif
 	</div>
 
 	<div class="row">
 		<div class="col-xs-12 text-center">
 			<h3>
 				Projects
-				@if($data['myPage'] === true)
-					<a href="{{ route('professor-add-project') }}"><i class="glyphicon glyphicon-plus pull-right"></i></a>
-				@endif
 			</h3>
+			@if($data['myPage'] === true)
+				<a href="{{ route('professor-add-project') }}"><i class="glyphicon glyphicon-plus pull-right"></i></a>
+			@endif
 			
 		</div>
 		@if(count($data['projects']) > 0)
@@ -222,58 +230,7 @@
 			</div>
 		@endif
 		
-		<!--
-		<div class="col-xs-10 col-xs-offset-1">
-			<table class="table table-striped table-condensed">
-				<thead>
-					<tr>
-						<th class="text-center">Title</th>
-						<th class="text-center">Abstract</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>Project 1</td>
-						<td class="text-center" id="project_1">
-							<a href="#">Abstract</a>
-							@if($data['myPage'] === true)
-								<div class="pull-right" id="edit_1">
-									<span>edit</span>
-								</div>
-							@endif
-						</td>
-					</tr>
-					<tr>
-						<td>Project 2</td>
-						<td class="text-center" id="project_2">
-							<a href="#">Abstract</a>
-							<div class="pull-right" id="edit_2">
-								<span>edit</span>
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<td>Project 3</td>
-						<td class="text-center" id="project_3">
-							<a href="#">Abstract</a>
-							<div class="pull-right" id="edit_3">
-								<span>edit</span>
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<td>Project 4</td>
-						<td class="text-center" id="project_4">
-							<a href="#">Abstract</a>
-							<div class="pull-right" id="edit_4">
-								<span>edit</span>
-							</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		-->
+		
 	</div>
 
 	<div class="row">
@@ -286,35 +243,6 @@
 			@if($data['myPage'] === true)
 			<button class="btn btn-default" class="btn btn-danger" data-toggle="modal" data-target="#publication_upload">Upload List</button>
 			@endif
-
-<!--
-			<table class="table table-striped table-condensed">
-				<thead>
-					<tr>
-						<th class="text-center">Title</th>
-						<th class="text-center">Link</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>Paper 1</td>
-						<td class="text-center"><a href="#">Abstract</a></td>
-					</tr>
-					<tr>
-						<td>Paper 2</td>
-						<td class="text-center"><a href="#">Abstract</a></td>
-					</tr>
-					<tr>
-						<td>Paper 3</td>
-						<td class="text-center"><a href="#">Abstract</a></td>
-					</tr>
-					<tr>
-						<td>Paper 4</td>
-						<td class="text-center"><a href="#">Abstract</a></td>
-					</tr>
-				</tbody>
-			</table>
--->
 		</div>
 	</div>
 
@@ -393,6 +321,57 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="modal fade" id="add_subject" aria-labelledby="add_subject" aria-hidden="true">
+
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">Add a subject</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							{{ Form::open(['route'=>'professor-add-subject-post', 'method'=>'POST', 'files'=>true, 'role'=>'form', 'class'=>'form-horizontal']) }}
+
+							<div class="form-group">
+								<label for="publications" class="col-sm-2 control-label">PDF File</label>
+								<div class="col-sm-10">
+									<select name="subject_id" id="subject">
+										@foreach($data['subject_list'] as $subject)
+											<option value="{{$subject['id']}}">{{$subject['name']}}</option>	
+										@endforeach
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="publications" class="col-sm-2 control-label">Semester</label>
+								<div class="col-sm-10">
+									<select name="semester_id" id="semester">
+										@foreach($data['semester_list'] as $semester)
+											<option value="{{$semester['id']}}">{{$semester['name']}}</option>	
+										@endforeach
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-sm-12 text-center">
+									{{ Form::submit('Add it', array('class'=>'btn btn-lg btn-primary')) }}
+									<button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">CANCEL</button>
+								</div>
+							</div>
+
+							{{ Form::close() }}
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer"></div>
+			</div>
+		</div>
+	</div>
 	@endif
 @stop
 
@@ -410,6 +389,41 @@
 				$('#edit_{{ $project["id"] }}').hide();
 			});
 		@endforeach
+		@foreach($data['subjects'] as $subject) 
+			$('#delete_subject_{{ $subject->id }}').hide();
+			$('#subject_{{ $subject->id }}').hover(function() {
+				$('#delete_subject_{{ $subject->id }}').show()
+			}, function() {
+				$('#delete_subject_{{ $subject->id }}').hide();
+			});
+		@endforeach
+
+		function deleteSubject(id) {
+			$('#overlay').show();
+			$.ajax({
+				type: "POST",
+				url: '{{ route("professor-delete-subject-post") }}',
+				data: {
+					subject_id: id
+				},
+				success: function(data, status, xhr) {
+					var obj = data;
+
+					if(obj.success === false) {
+						$('#overlay').hide();
+						alert("FAILED. Please Try Again.");
+					} else {
+						alert("Success!");
+						window.location = "{{ route('professor-profile') }}";
+					}
+				},
+				error: function(xhr, status, err) {
+					$('#overlay').hide();
+					alert("FAILED. Please Try Again.");
+				},
+				timeout: 20000
+			});
+		}
 	</script>	
 @endif
 

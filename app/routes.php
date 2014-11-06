@@ -52,6 +52,9 @@ Route::group(array('before'=>'auth'), function() {
 		Route::get('edit-project/{id}', array('as'=>'professor-edit-project', 'uses'=>'ProjectController@editProjectPage'))->where('id','\d+');
 		Route::post('edit-project/{id}', array('as'=>'professor-edit-project-post', 'uses'=>'ProjectController@editProject'))->where('id','\d+');
 		
+		Route::post('add-subject', array('as'=>'professor-add-subject-post', 'uses'=>'ProfessorController@addSubject'));
+		Route::post('delete-subject', array('as'=>'professor-delete-subject-post', 'uses'=>'ProfessorController@removeSubject'));
+
 		Route::post('upload/publications-list', array('as'=>'professor-upload-publications', 'uses'=>'FileController@professorPublicationUpload'));
 
 		Route::get('delete-project/{id}', array('as'=>'professor-delete-project', 'uses'=>'ProfessorController@deleteProject'))->where('id', '\d+');

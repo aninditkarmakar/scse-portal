@@ -300,4 +300,14 @@ body {
     padding-top: 0;
   }
 
+  i.glyphicon.glyphicon-remove {
+    cursor: pointer;
+    color: red;
+  }
+
+  i.glyphicon.glyphicon-plus {
+    cursor: pointer;
+    color: green;
+  }
+
 }

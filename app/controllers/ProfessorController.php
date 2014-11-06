@@ -173,10 +173,33 @@ class ProfessorController extends \BaseController {
 		$data['designation'] = $faculty->designation;
 		$data['about_me'] = $faculty->about_me;
 		$data['mobile_no'] = $faculty->mobile_no;
+		$data['subjects'] = $faculty->getSubjects();
 
 		$projects = Project::with('projectAbstract', 'students', 'projectType')->where('faculty_id','=',$faculty->id)->get();
 
 		$data['projects'] = array(); //$projects->toArray();
+
+		$subject_list = DB::table('subjects')->select('id','subject_code','subject')->orderBy('subject_code')->remember(10)->get();
+		$data['subject_list'] = [];
+
+		$semester_list = DB::table('semesters')->select('id','type', 'start_year', 'end_year')->orderBy('start_year','desc')->remember(10)->get();
+		$data['semester_list'] = [];
+
+		foreach($subject_list as $subject) {
+			$item = [];
+			$item['name'] = $subject->subject_code.' - '.$subject->subject;
+			$item['id'] = $subject->id;
+
+			array_push($data['subject_list'], $item);
+		}
+
+		foreach($semester_list as $semester) {
+			$item = [];
+			$item['name'] = $semester->type.' '.$semester->start_year.'-'.$semester->end_year;
+			$item['id'] = $semester->id;
+
+			array_push($data['semester_list'], $item);
+		}
 
 		foreach($projects as $project) {
 			$item['id'] = $project->id;
@@ -513,5 +536,38 @@ class ProfessorController extends \BaseController {
 		DB::commit();
 		
 		return Redirect::route('professor-profile');
+	}
+
+	public function addSubject() {
+		$subject_id = Input::get('subject_id');
+		$semester_id = Input::get('semester_id');
+
+		$faculty = Auth::user()->faculty;
+
+		try {
+			$faculty->insertSubject($subject_id, $semester_id);
+		} catch(\PDOException $e) {
+			return Redirect::route('professor-profile')->withErrors(['message'=>'There was an error saving the details to the database.']);
+		}
+
+		return Redirect::route('professor-profile');
+		
+	}
+
+	public function removeSubject() {
+		$subject_id = Input::get('subject_id');
+		$faculty = Auth::user()->faculty;
+		$returnData['success'] = false;
+
+		try {
+			$faculty->removeSubject($subject_id);
+		} catch (\PDOException $e) {
+			return Response::make(json_encode($returnData))->header('Content-Type', 'application/json');
+		}
+
+		$returnData['success'] = true;
+
+		return Response::make(json_encode($returnData))->header('Content-Type', 'application/json');		
+
 	}
 }

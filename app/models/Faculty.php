@@ -109,5 +109,48 @@ class Faculty extends \Eloquent {
 
 		return $data;
 	} 
+
+	public function getSubjects() {
+		$subjects = DB::table('faculties_has_subjects')
+				->join('subjects', 'faculties_has_subjects.subject_id','=','subjects.id')
+				->join('semesters', 'faculties_has_subjects.semester_id', '=','semesters.id')
+				->select('subject_id as id','subject', 'subject_code', 'type as semester_type', 'start_year', 'end_year')
+				->where('faculties_has_subjects.faculty_id','=', $this->id)
+				->orderBy('start_year', 'desc')
+				->take(7)
+				->get();
+
+		return $subjects;
+	}
+
+	public function removeSubject($subject_id) {
+		DB::beginTransaction();
+
+		try {
+			DB::table('faculties_has_subjects')
+			->where('faculty_id','=',$this->id)
+			->where('subject_id','=', $subject_id)
+			->delete();
+			DB::commit();
+		} catch (\PDOException $e) {
+			DB::rollback();
+			throw $e;
+		}
+		
+	}
+
+	public function insertSubject($subject_id, $semester_id) {
+		DB::beginTransaction();
+
+		try {
+			DB::table('faculties_has_subjects')
+				->insert(array('subject_id'=>$subject_id, 'semester_id'=>$semester_id, 'faculty_id'=>$this->id));
+
+			DB::commit();
+		} catch(\PDOException $e) {
+			DB::rollback();
+			throw $e;
+		}
+	}
 	
 }

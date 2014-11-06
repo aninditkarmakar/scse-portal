@@ -257,31 +257,31 @@
     $('#form_edit').parsley().subscribe('parsley:form:validate', function (formInstance) {
     	formInstance.submitEvent.preventDefault();
     	if (formInstance.isValid()) {
-	      console.log("valid!");
-    		$('#overlay').show();
-				$.ajax({
-					type: "POST",
-					url: '{{ route("professor-edit-post") }}',
-					data: {
-						data: JSON.stringify(model)
-					},
-					success: function(data, status, xhr) {
-						var obj = data;
+	      	console.log("valid!");
+			$('#overlay').show();
+			$.ajax({
+				type: "POST",
+				url: '{{ route("professor-edit-post") }}',
+				data: {
+					data: JSON.stringify(model)
+				},
+				success: function(data, status, xhr) {
+					var obj = data;
 
-						if(obj.success === false) {
-							$('#overlay').hide();
-							alert("FAILED. Please Try Again.");
-						} else {
-							alert("Success!");
-							window.location = "{{ route('professor-profile') }}";
-						}
-					},
-					error: function(xhr, status, err) {
+					if(obj.success === false) {
 						$('#overlay').hide();
 						alert("FAILED. Please Try Again.");
-					},
-					timeout: 20000
-				});  
+					} else {
+						alert("Success!");
+						window.location = "{{ route('professor-profile') }}";
+					}
+				},
+				error: function(xhr, status, err) {
+					$('#overlay').hide();
+					alert("FAILED. Please Try Again.");
+				},
+				timeout: 20000
+			});  
 	    }
     });
 
